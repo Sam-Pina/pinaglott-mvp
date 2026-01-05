@@ -4,7 +4,7 @@ import { Word } from "@/entities/Word";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
-  Users, BookOpen, Trophy,
+  Users, Calendar, BookOpen, Trophy,
   Loader2, Shield, Search, Filter,
   UserCheck, Crown, User as UserIcon,
   MoreHorizontal, RotateCcw

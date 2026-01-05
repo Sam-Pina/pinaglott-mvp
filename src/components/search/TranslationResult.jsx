@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Book, Save, Volume2, Volume1, X, ImageOff } from 'lucide-react';
+import { Book, Save, Volume2, ExternalLink, Volume1, X, ImageOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

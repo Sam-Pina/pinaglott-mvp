@@ -1,12 +1,14 @@
 
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
-  Search, Book, ArrowRight, Zap, Eye,
-  MessageSquare, PenTool, Brain
+  Search, Book, ArrowRight, CheckCircle, Zap, BarChart, Eye,
+  MessageSquare, PenTool, Brain, BookOpen, Layers,
+  Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useToast, ToastContainer } from "@/components/ui/toast";
 import { InvokeLLM, GenerateImage } from "@/integrations/Core";
 import TranslationResult from "../components/search/TranslationResult";

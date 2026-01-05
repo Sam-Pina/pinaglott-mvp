@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { Target, Save, Edit3, Loader2, RotateCcw, Calendar } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Target, Save, Trophy, Edit3, Loader2, RotateCcw, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
@@ -12,6 +12,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 
 export default function DailyGoalWidget({ 

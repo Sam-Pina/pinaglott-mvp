@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -46,7 +47,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white">
-      <style>{`
+      <style jsx>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
         
         .logo-wrapper {

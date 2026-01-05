@@ -8,7 +8,7 @@ import { createPageUrl } from "@/utils";
 import {
   Calendar, BookOpen, Trophy, BarChart2,
   Award, Clock, Loader2, CheckCircle,
-  Brain, LogOut, ChevronLeft, ChevronRight, Camera, Trash2
+  Brain, UserCog, LogOut, ChevronLeft, ChevronRight, Camera, Trash2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -28,7 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { format, parseISO, subDays, addMonths, subMonths } from "date-fns";
+import { format, differenceInDays, parseISO, subDays, addMonths, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import AchievementPopup from '../components/achievements/AchievementPopup';
 

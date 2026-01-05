@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '@/entities/User';
 import { Word } from '@/entities/Word';
-import { Target, Trophy, TrendingUp, Book, Star } from 'lucide-react';
+import { Target, Trophy, Calendar, TrendingUp, Book, Star } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 

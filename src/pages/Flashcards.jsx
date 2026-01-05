@@ -7,7 +7,7 @@ import { createPageUrl } from "@/utils";
 import { 
   Search, Plus, BookOpen, Filter, 
   Star, StarOff, SortAsc, SortDesc, Trash2, Grid, List,
-  Layers, CheckSquare, Shuffle, Loader2,
+  Layers, CheckSquare, RotateCw, Shuffle, Loader2,
   ArrowRight, ArrowLeft, ChevronRight, Pencil, Volume2, Volume1
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -46,12 +46,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-
-
+import { Progress } from "@/components/ui/progress";
+import {
+  Popover,
+  PopoverContent,
+} from "@/components/ui/popover";
 
 import FlashcardItem from "../components/flashcards/FlashcardItem";
 import DailyGoalWidget from '../components/flashcards/DailyGoalWidget';
