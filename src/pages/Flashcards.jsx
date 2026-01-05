@@ -1058,8 +1058,7 @@ export default function Flashcards() {
               dailyGoal={dailyGoal}
               weeklyGoal={weeklyGoal}
               dailyProgress={wordsAddedToday}
-              weeklyAddedProgress={wordsAddedThisWeek} // Changed prop name for clarity
-              weeklyReviewProgress={weeklyReviewCount} // New prop
+              weeklyProgress={wordsAddedThisWeek}
               onDailyGoalSet={async (newGoalValue) => {
                 await User.updateMyUserData({ daily_goal: newGoalValue });
                 setDailyGoal(newGoalValue); 
