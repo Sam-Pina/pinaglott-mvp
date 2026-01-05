@@ -12,7 +12,7 @@ import { createPageUrl } from "@/utils";
 
 export default function Search() {
   const navigate = useNavigate();
-  const { toasts, showToast, removeToast } = useToast();
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -152,14 +152,15 @@ export default function Search() {
   };
 
   const handleFlashcardSaved = () => {
-    showToast("Flashcard salvo com sucesso");
+    toast({
+      title: "Sucesso!",
+      description: "Flashcard salvo com sucesso"
+    });
     handleCloseResult();
   };
 
   return (
     <div className="min-h-screen py-8 px-4">
-      <ToastContainer toasts={toasts} onRemove={removeToast} />
-      
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-10">
           <h1 className="text-3xl font-bold text-gray-800 mb-3">Pesquisar palavras em múltiplos idiomas</h1>
