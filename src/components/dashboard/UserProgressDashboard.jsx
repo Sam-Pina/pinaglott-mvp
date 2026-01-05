@@ -40,9 +40,9 @@ export default function UserProgressDashboard() {
           return createdDate >= weekStart;
         }).length;
 
-        // Contar TODAS as revisões feitas esta semana usando times_reviewed_this_week
-        const totalWeeklyReviews = words.reduce((count, word) => {
-          return count + (word.times_reviewed_this_week || 0);
+        // Contar TODAS as revisões (total geral)
+        const totalReviews = words.reduce((count, word) => {
+          return count + (word.times_reviewed || 0);
         }, 0);
 
         // Progresso diário (palavras adicionadas hoje)
@@ -57,7 +57,7 @@ export default function UserProgressDashboard() {
           dailyProgress: dailyProgress,
           totalFlashcards: words.length,
           studyStreak: userData.study_streak || 0,
-          weeklyReviews: totalWeeklyReviews
+          weeklyReviews: totalReviews
         });
         
       } catch (error) {
@@ -212,7 +212,7 @@ export default function UserProgressDashboard() {
                 <TrendingUp className="w-4 h-4 text-green-600" />
               </div>
               <p className="text-lg font-bold text-green-700">{stats.weeklyReviews}</p>
-              <p className="text-xs text-green-600">Revisões esta semana</p>
+              <p className="text-xs text-green-600">Total de revisões</p>
             </div>
           </div>
 
