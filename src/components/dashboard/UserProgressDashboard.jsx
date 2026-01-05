@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { User } from '@/entities/User';
 import { Word } from '@/entities/Word';
@@ -88,13 +87,20 @@ export default function UserProgressDashboard() {
       }
     };
     
+    // Listener para recarregar quando um flashcard é atualizado ou adicionado
+    const handleStorageChange = () => {
+      loadUserProgress();
+    };
+    
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('storage', handleStorageChange);
     
     // Recarregar a cada 30 segundos para manter atualizado
     const interval = setInterval(loadUserProgress, 30000);
     
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('storage', handleStorageChange);
       clearInterval(interval);
     };
   }, []); // Empty dependency array means this runs once on mount and cleans up on unmount

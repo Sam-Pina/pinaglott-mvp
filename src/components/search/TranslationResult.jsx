@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Book, Save, Volume2, ExternalLink, Volume1, X, ImageOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -178,7 +177,11 @@ export default function TranslationResult({ word, onSaveFlashcard, onClose }) {
 
       setSaved(true);
       setHasSavedCard(true);
-      
+
+      // Disparar evento para atualizar o dashboard
+      localStorage.setItem('flashcard_updated', Date.now().toString());
+      window.dispatchEvent(new Event('storage'));
+
       if (onSaveFlashcard) onSaveFlashcard(word);
     } catch (error) {
       console.error("Erro ao salvar flashcard:", error);
