@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -9,7 +8,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast, ToastContainer } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastContainer } from "@/components/ui/toast";
 import { InvokeLLM, GenerateImage } from "@/integrations/Core";
 import TranslationResult from "../components/search/TranslationResult";
 import UserProgressDashboard from "../components/dashboard/UserProgressDashboard";
