@@ -9,13 +9,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { ToastContainer } from "@/components/ui/toast";
 import { InvokeLLM, GenerateImage } from "@/integrations/Core";
 import TranslationResult from "../components/search/TranslationResult";
 import UserProgressDashboard from "../components/dashboard/UserProgressDashboard";
 
 export default function Home() {
-  const { toasts, showToast, removeToast } = useToast();
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -138,7 +137,10 @@ export default function Home() {
   };
 
   const handleFlashcardSaved = () => {
-    showToast("Flashcard salvo com sucesso");
+    toast({
+      title: "Sucesso!",
+      description: "Flashcard salvo com sucesso"
+    });
     handleCloseResult();
   };
 
@@ -158,8 +160,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      <ToastContainer toasts={toasts} onRemove={removeToast} />
-      
       {/* Hero Section */}
       <section className="py-16 md:py-24 px-4">
         <div className="container mx-auto max-w-6xl">
