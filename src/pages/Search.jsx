@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from "react";
 import { InvokeLLM, GenerateImage } from "@/integrations/Core";
 import { Search as SearchIcon, Loader2, History, X, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast, ToastContainer } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import TranslationResult from "../components/search/TranslationResult";
 import LanguageSelector, { LANGUAGES } from "../components/language/LanguageSelector";
 import { User } from "@/entities/User";
