@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { Word } from "@/entities/Word";
 import { User } from "@/entities/User";
@@ -292,6 +291,27 @@ export default function Flashcards() {
     calculateWordsAddedThisWeek(flashcards); // Renamed for clarity
     calculateWeeklyReviewCount(flashcards); // New call
   }, [flashcards, calculateWordsAddedThisWeek, calculateWeeklyReviewCount]);
+
+  // Listener para recarregar flashcards quando houver atualizações
+  useEffect(() => {
+    const handleStorageChange = () => {
+      loadFlashcards();
+    };
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        loadFlashcards();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [loadFlashcards]);
 
   const updateStats = (words) => {
     const favoritedCards = words.filter(card => card.favorite).length;
