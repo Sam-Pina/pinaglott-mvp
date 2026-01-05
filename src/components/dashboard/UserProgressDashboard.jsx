@@ -40,19 +40,9 @@ export default function UserProgressDashboard() {
           return createdDate >= weekStart;
         }).length;
 
-        // Contar TODAS as revisões feitas esta semana
+        // Contar TODAS as revisões feitas esta semana usando times_reviewed_this_week
         const totalWeeklyReviews = words.reduce((count, word) => {
-          if (word.last_review_date) {
-            const reviewDate = new Date(word.last_review_date);
-            if (reviewDate >= weekStart) {
-                // Since we don't have a history of reviews, we approximate by
-                // checking if the last review was this week and summing today's reviews.
-                // This is an approximation, but better than before.
-                // The correct way would be to have a 'Review' entity.
-                return count + (word.times_reviewed_today || 0);
-            }
-          }
-          return count;
+          return count + (word.times_reviewed_this_week || 0);
         }, 0);
 
         // Progresso diário (palavras adicionadas hoje)
