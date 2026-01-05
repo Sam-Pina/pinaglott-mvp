@@ -98,13 +98,14 @@ export default function Search() {
 
       // 2. Gerar imagem ilustrativa
       const imageResponse = await GenerateImage({
-        prompt: `A high-quality, cute cartoon-style illustration representing the concept of "${translationResponse.input_word}".
-Illustrated in a clean, modern, chibi-style character design with rounded shapes, thick and smooth outlines, big expressive eyes, and soft simple shading.
-Minimalist, friendly, educational visual style suitable for language learning.
-Single clear subject, centered composition, no text or words.
-Flat yet polished digital illustration, vector-like quality.
+        prompt: `A high-quality stylized illustration representing the concept of "${translationResponse.input_word}".
+Clean, refined lineart with smooth, well-defined strokes and balanced proportions.
+Modern digital illustration style with elegant shapes, subtle depth, and minimal yet expressive details.
+Professional, minimalist, and visually polished aesthetic suitable for educational and language-learning applications.
+Single clear subject, centered composition, no text or typography.
+Soft lighting, controlled shading, flat colors with slight gradients.
 Neutral solid-color background.
-Consistent proportions, soft lighting, simple details, visually appealing and easy to recognize.`
+Consistent, premium illustration style.`
       });
 
       // 3. Combinar todos os resultados
