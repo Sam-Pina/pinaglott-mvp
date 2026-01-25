@@ -110,22 +110,62 @@ export default function Categories() {
     loadFlashcards(category.id, inputLanguage, outputLanguage);
   };
 
-  const loadFlashcards = (categoryId, inLang, outLang) => {
+  const loadFlashcards = async (categoryId, inLang, outLang) => {
     // Buscar flashcards estáticos da categoria e idioma de saída selecionados
     const categoryFlashcards = STATIC_FLASHCARDS[categoryId]?.[outLang] || [];
     
-    // Adicionar IDs temporários e campos necessários
-    const flashcardsWithIds = categoryFlashcards.map((card, index) => ({
-      ...card,
-      id: `static-${categoryId}-${outLang}-${index}`,
-      mastery_level: 0,
-      times_reviewed: 0,
-      times_reviewed_today: 0,
-      favorite: false,
-      category: categoryId
-    }));
-    
-    setFlashcards(flashcardsWithIds);
+    // Buscar flashcards salvos do banco de dados
+    try {
+      const savedCards = await Word.list();
+      
+      // Mapear flashcards estáticos com dados salvos (se existir)
+      const flashcardsWithIds = categoryFlashcards.map((card, index) => {
+        // Procurar se esse flashcard já foi salvo
+        const savedCard = savedCards.find(sc => 
+          sc.input_word === card.input_word && 
+          sc.output_translation === card.output_translation &&
+          sc.input_language === card.input_language &&
+          sc.output_language === card.output_language
+        );
+        
+        if (savedCard) {
+          // Se foi salvo, usar os dados do banco (com ID real)
+          return {
+            ...savedCard,
+            isSaved: true,
+            category: categoryId
+          };
+        }
+        
+        // Se não foi salvo, usar dados estáticos
+        return {
+          ...card,
+          id: `static-${categoryId}-${outLang}-${index}`,
+          mastery_level: 0,
+          times_reviewed: 0,
+          times_reviewed_today: 0,
+          favorite: false,
+          category: categoryId,
+          isSaved: false
+        };
+      });
+      
+      setFlashcards(flashcardsWithIds);
+    } catch (error) {
+      console.error("Erro ao carregar flashcards:", error);
+      // Fallback para flashcards estáticos
+      const flashcardsWithIds = categoryFlashcards.map((card, index) => ({
+        ...card,
+        id: `static-${categoryId}-${outLang}-${index}`,
+        mastery_level: 0,
+        times_reviewed: 0,
+        times_reviewed_today: 0,
+        favorite: false,
+        category: categoryId,
+        isSaved: false
+      }));
+      setFlashcards(flashcardsWithIds);
+    }
   };
 
   const handleBackToCategories = () => {
@@ -221,14 +261,73 @@ export default function Categories() {
 
   const handleSaveFlashcard = async (flashcard) => {
     try {
-      const { id, ...dataToSave } = flashcard;
-      await Word.create(dataToSave);
+      const { id, isSaved, ...dataToSave } = flashcard;
+      const savedCard = await Word.create(dataToSave);
       
       setFlashcards(prev => 
-        prev.map(f => f.id === id ? { ...f, isSaved: true } : f)
+        prev.map(f => f.id === id ? { ...savedCard, isSaved: true, category: flashcard.category } : f)
       );
     } catch (error) {
       console.error("Erro ao salvar flashcard:", error);
+    }
+  };
+
+  const handleUpdateMastery = async (flashcard) => {
+    // Se ainda não foi salvo, salvar primeiro
+    if (!flashcard.isSaved || typeof flashcard.id === 'string') {
+      const newMasteryLevel = Math.min(5, (flashcard.mastery_level || 0) + 1);
+      
+      const updatedCard = {
+        ...flashcard,
+        mastery_level: newMasteryLevel,
+        times_reviewed: (flashcard.times_reviewed || 0) + 1,
+        times_reviewed_today: (flashcard.times_reviewed_today || 0) + 1,
+        times_reviewed_this_week: (flashcard.times_reviewed_this_week || 0) + 1,
+        last_review_date: new Date().toISOString()
+      };
+      
+      try {
+        const { id, isSaved, ...dataToSave } = updatedCard;
+        const savedCard = await Word.create(dataToSave);
+        
+        setFlashcards(prev => 
+          prev.map(f => f.id === flashcard.id ? { ...savedCard, isSaved: true, category: flashcard.category } : f)
+        );
+        
+        return savedCard;
+      } catch (error) {
+        console.error("Erro ao salvar flashcard:", error);
+        throw error;
+      }
+    } else {
+      // Se já está salvo, atualizar
+      const newMasteryLevel = Math.min(5, (flashcard.mastery_level || 0) + 1);
+      
+      try {
+        await Word.update(flashcard.id, { 
+          mastery_level: newMasteryLevel,
+          times_reviewed: (flashcard.times_reviewed || 0) + 1,
+          times_reviewed_today: (flashcard.times_reviewed_today || 0) + 1,
+          times_reviewed_this_week: (flashcard.times_reviewed_this_week || 0) + 1,
+          last_review_date: new Date().toISOString()
+        });
+        
+        setFlashcards(prev => 
+          prev.map(f => f.id === flashcard.id ? { 
+            ...f, 
+            mastery_level: newMasteryLevel,
+            times_reviewed: (f.times_reviewed || 0) + 1,
+            times_reviewed_today: (f.times_reviewed_today || 0) + 1,
+            times_reviewed_this_week: (f.times_reviewed_this_week || 0) + 1,
+            last_review_date: new Date().toISOString()
+          } : f)
+        );
+        
+        return flashcard;
+      } catch (error) {
+        console.error("Erro ao atualizar flashcard:", error);
+        throw error;
+      }
     }
   };
 
@@ -691,7 +790,9 @@ export default function Categories() {
                         word={flashcard}
                         onDelete={() => {}}
                         onToggleFavorite={() => {}}
-                        onEditMastery={() => {}}
+                        onEditMastery={async (wordId, newMastery) => {
+                          await handleUpdateMastery(flashcard);
+                        }}
                         onEdit={() => {}}
                       />
                       {!flashcard.isSaved && (
