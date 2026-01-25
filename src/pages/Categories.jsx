@@ -3,7 +3,7 @@ import { Word } from "@/entities/Word";
 import { User } from "@/entities/User";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Layers, Loader2, ArrowLeft, BookOpen, ChevronRight, GraduationCap, ArrowRight } from "lucide-react";
+import { Layers, Loader2, ArrowLeft, BookOpen, ChevronRight, GraduationCap, ArrowRight, Volume2, Volume1 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -237,12 +237,81 @@ export default function Categories() {
   if (studyMode && flashcards.length > 0) {
     const currentCard = flashcards[currentStudyIndex];
     
+    const playAudio = (text, languageCode = 'en', rate = 1.0) => {
+      if (!text || typeof window === 'undefined' || !window.speechSynthesis) {
+        console.error("Speech Synthesis not supported.");
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = rate;
+      
+      const languageMap = {
+        'pt': 'pt-BR',
+        'en': 'en-US',
+        'es': 'es-ES',
+        'fr': 'fr-FR'
+      };
+      
+      const actualLangCode = languageCode in languageMap ? languageCode : 'en';
+      utterance.lang = languageMap[actualLangCode] || 'en-US';
+
+      const setVoiceAndSpeak = () => {
+        const voices = window.speechSynthesis.getVoices();
+        let selectedVoice = null;
+        
+        const preferredVoices = {
+          'pt': ['Google português do Brasil', 'Microsoft Maria - Portuguese (Brazil)', 'Luciana', 'Joana'],
+          'en': ['Google US English', 'Microsoft David - English (United States)', 'Samantha', 'Alex'],
+          'es': ['Google español', 'Microsoft Helena - Spanish (Spain)', 'Monica', 'Jorge'],
+          'fr': ['Google français', 'Microsoft Hortense - French (France)', 'Amelie', 'Thomas']
+        };
+        
+        if (preferredVoices[actualLangCode]) {
+          selectedVoice = voices.find(v => 
+            preferredVoices[actualLangCode].some(preferred => 
+              v.name.toLowerCase().includes(preferred.toLowerCase())
+            ) && v.lang.startsWith(actualLangCode)
+          );
+        }
+        
+        if (!selectedVoice) {
+          selectedVoice = voices.find(v => 
+            v.lang === utterance.lang && v.localService
+          );
+        }
+        
+        if (!selectedVoice) {
+          selectedVoice = voices.find(v => 
+            v.lang.startsWith(actualLangCode) || v.lang === utterance.lang
+          );
+        }
+        
+        if (!selectedVoice) {
+          selectedVoice = voices.find(v => v.default);
+        }
+        
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+        }
+        
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+      };
+
+      if (window.speechSynthesis.getVoices().length > 0) {
+        setVoiceAndSpeak();
+      } else {
+        window.speechSynthesis.onvoiceschanged = setVoiceAndSpeak;
+      }
+    };
+    
     return (
       <div className="min-h-screen py-8 px-4">
         <div className="container mx-auto max-w-2xl">
           <div className="text-center mb-8">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
-              Modo de Estudo: {selectedCategory.name} ({currentStudyIndex + 1} de {flashcards.length})
+              Modo de Estudo ({currentStudyIndex + 1} de {flashcards.length})
             </h1>
             <Button 
               variant="outline" 
@@ -256,7 +325,17 @@ export default function Categories() {
           <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden mb-8">
             <div className="p-6 pb-0">
               <div className="flex justify-between items-center mb-4">
-                <Badge className="capitalize py-1 px-2 text-sm">{selectedCategory.name}</Badge>
+                <Badge className="capitalize py-1 px-2 text-sm">{currentCard.category?.replace('_', ' ') || 'basic'}</Badge>
+                <div className="flex space-x-1">
+                  {[...Array(5)].map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-3 h-3 rounded-full ${
+                        i < (currentCard.mastery_level || 0) ? 'bg-green-500' : 'bg-gray-200'
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
               
               <div 
@@ -265,14 +344,28 @@ export default function Categories() {
               >
                 {!flippedInStudy ? (
                   <>
-                    <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
-                      {currentCard.input_word}
-                    </h2>
+                    <div className="flex items-center gap-3 mb-4">
+                      <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
+                        {currentCard.input_word || currentCard.english}
+                      </h2>
+                      <button
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          playAudio(
+                            currentCard.input_word || currentCard.english, 
+                            currentCard.input_language || 'en'
+                          ); 
+                        }}
+                        className="p-2 hover:bg-blue-100 rounded-full transition-colors"
+                      >
+                        <Volume2 className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+                      </button>
+                    </div>
                     {currentCard.image_url && (
                       <div className="mt-4 mb-6 sm:mb-8 rounded-md overflow-hidden border border-gray-100 max-w-xs sm:max-w-sm">
                         <img 
                           src={currentCard.image_url} 
-                          alt={currentCard.input_word} 
+                          alt={currentCard.input_word || currentCard.english} 
                           className="w-full h-40 sm:h-48 object-cover"
                         />
                       </div>
@@ -281,16 +374,74 @@ export default function Categories() {
                   </>
                 ) : (
                   <>
-                    <h2 className="text-3xl sm:text-4xl font-bold text-indigo-600 mb-2">
-                      {currentCard.output_translation}
-                    </h2>
-                    <p className="text-gray-600 text-base mb-4 sm:mb-6">{currentCard.input_word}</p>
+                    <div className="flex items-center gap-3 mb-2">
+                      <h2 className="text-3xl sm:text-4xl font-bold text-indigo-600">
+                        {currentCard.output_translation || currentCard.portuguese}
+                      </h2>
+                      <button
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          playAudio(
+                            currentCard.output_translation || currentCard.portuguese, 
+                            currentCard.output_language || 'pt'
+                          ); 
+                        }}
+                        className="p-2 hover:bg-indigo-100 rounded-full transition-colors"
+                      >
+                        <Volume2 className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" />
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                      <p className="text-gray-600 text-base">{currentCard.input_word || currentCard.english}</p>
+                      <button
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          playAudio(
+                            currentCard.input_word || currentCard.english, 
+                            currentCard.input_language || 'en'
+                          ); 
+                        }}
+                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                      >
+                        <Volume1 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+                      </button>
+                    </div>
                     
                     {currentCard.example && (
                       <div className="bg-gray-50 p-3 sm:p-4 rounded-md border border-gray-100 mb-4 max-w-md text-base">
-                        <p className="text-gray-700 mb-1 sm:mb-2">"{currentCard.example}"</p>
+                        <div className="flex items-center justify-between mb-1 sm:mb-2">
+                          <p className="text-gray-700">"{currentCard.example}"</p>
+                          <button
+                            onClick={(e) => { 
+                              e.stopPropagation(); 
+                              playAudio(
+                                currentCard.example, 
+                                currentCard.input_language || 'en',
+                                0.8
+                              ); 
+                            }}
+                            className="p-2 hover:bg-gray-100 rounded-full transition-colors ml-2"
+                          >
+                            <Volume1 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+                          </button>
+                        </div>
                         {currentCard.example_translation && (
-                          <p className="text-gray-500 italic text-sm">{currentCard.example_translation}</p>
+                          <div className="flex items-center justify-between">
+                            <p className="text-gray-500 italic text-sm">{currentCard.example_translation}</p>
+                            <button
+                              onClick={(e) => { 
+                                e.stopPropagation(); 
+                                playAudio(
+                                  currentCard.example_translation, 
+                                  currentCard.output_language || 'pt',
+                                  0.8
+                                ); 
+                              }}
+                              className="p-2 hover:bg-gray-100 rounded-full transition-colors ml-2"
+                            >
+                              <Volume1 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+                            </button>
+                          </div>
                         )}
                       </div>
                     )}
@@ -310,12 +461,32 @@ export default function Categories() {
                 Anterior
               </Button>
               
+              <div className="flex gap-2 w-full sm:w-auto">
+                {flippedInStudy && (
+                  <Button
+                    variant="outline"
+                    onClick={handleNextCard} 
+                    className="border-orange-200 text-orange-600 hover:bg-orange-50 flex-1 sm:flex-none h-11 px-3 sm:px-5 text-base"
+                  >
+                    Revisar Depois
+                  </Button>
+                )}
+                
+                <Button
+                  onClick={() => flippedInStudy ? handleNextCard() : setFlippedInStudy(true)}
+                  className="h-11 px-5 text-base flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700"
+                >
+                  {!flippedInStudy ? "Ver Tradução" : (currentStudyIndex === flashcards.length - 1 ? "Finalizar" : "Próximo")}
+                </Button>
+              </div>
+              
               <Button
-                onClick={() => flippedInStudy ? handleNextCard() : setFlippedInStudy(true)}
-                className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto h-11 px-5 text-base"
+                onClick={handleNextCard}
+                variant="outline"
+                className="border-gray-200 w-full sm:w-auto h-11 px-5 text-base"
               >
-                {!flippedInStudy ? "Ver Tradução" : (currentStudyIndex === flashcards.length - 1 ? "Finalizar" : "Próximo")}
-                {flippedInStudy && <ArrowRight className="w-4 h-4 ml-2" />}
+                Próximo
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           </div>
