@@ -131,6 +131,32 @@ export const STATIC_FLASHCARDS = {
         image_url: "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800",
         english: "boxing",
         portuguese: "boxe"
+      },
+      {
+        input_word: "yoga",
+        output_translation: "yoga",
+        input_language: "en",
+        output_language: "pt",
+        definition: "A Hindu spiritual and ascetic discipline, including breath control, simple meditation, and the adoption of specific bodily postures.",
+        definition_translation: "Uma disciplina espiritual e ascética hindu, incluindo controle da respiração, meditação simples e adoção de posturas corporais específicas.",
+        example: "She practices yoga every morning to stay flexible.",
+        example_translation: "Ela pratica yoga todas as manhãs para manter a flexibilidade.",
+        image_url: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800",
+        english: "yoga",
+        portuguese: "yoga"
+      },
+      {
+        input_word: "skating",
+        output_translation: "patinação",
+        input_language: "en",
+        output_language: "pt",
+        definition: "The action or activity of gliding across a surface on skates.",
+        definition_translation: "A ação ou atividade de deslizar sobre uma superfície com patins.",
+        example: "Ice skating is a popular winter sport.",
+        example_translation: "Patinação no gelo é um esporte de inverno popular.",
+        image_url: "https://images.unsplash.com/photo-1520420097861-e4959843b682?w=800",
+        english: "skating",
+        portuguese: "patinação"
       }
     ],
     en: [
@@ -263,6 +289,32 @@ export const STATIC_FLASHCARDS = {
         image_url: "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800",
         english: "boxing",
         portuguese: "boxe"
+      },
+      {
+        input_word: "yoga",
+        output_translation: "yoga",
+        input_language: "pt",
+        output_language: "en",
+        definition: "Uma disciplina espiritual e ascética.",
+        definition_translation: "A spiritual and ascetic discipline.",
+        example: "Ela pratica yoga todas as manhãs.",
+        example_translation: "She practices yoga every morning.",
+        image_url: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800",
+        english: "yoga",
+        portuguese: "yoga"
+      },
+      {
+        input_word: "patinação",
+        output_translation: "skating",
+        input_language: "pt",
+        output_language: "en",
+        definition: "A atividade de deslizar com patins.",
+        definition_translation: "The activity of gliding on skates.",
+        example: "Patinação no gelo é popular no inverno.",
+        example_translation: "Ice skating is popular in winter.",
+        image_url: "https://images.unsplash.com/photo-1520420097861-e4959843b682?w=800",
+        english: "skating",
+        portuguese: "patinação"
       }
     ],
     es: [
@@ -395,6 +447,32 @@ export const STATIC_FLASHCARDS = {
         image_url: "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800",
         english: "boxing",
         portuguese: "boxeo"
+      },
+      {
+        input_word: "yoga",
+        output_translation: "yoga",
+        input_language: "en",
+        output_language: "es",
+        definition: "A spiritual and ascetic discipline.",
+        definition_translation: "Una disciplina espiritual y ascética.",
+        example: "She practices yoga every morning.",
+        example_translation: "Ella practica yoga todas las mañanas.",
+        image_url: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800",
+        english: "yoga",
+        portuguese: "yoga"
+      },
+      {
+        input_word: "skating",
+        output_translation: "patinaje",
+        input_language: "en",
+        output_language: "es",
+        definition: "The activity of gliding on skates.",
+        definition_translation: "La actividad de deslizarse con patines.",
+        example: "Ice skating is popular in winter.",
+        example_translation: "El patinaje sobre hielo es popular en invierno.",
+        image_url: "https://images.unsplash.com/photo-1520420097861-e4959843b682?w=800",
+        english: "skating",
+        portuguese: "patinaje"
       }
     ],
     fr: [
@@ -527,10 +605,151 @@ export const STATIC_FLASHCARDS = {
         image_url: "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800",
         english: "boxing",
         portuguese: "boxe"
+      },
+      {
+        input_word: "yoga",
+        output_translation: "yoga",
+        input_language: "en",
+        output_language: "fr",
+        definition: "A spiritual and ascetic discipline.",
+        definition_translation: "Une discipline spirituelle et ascétique.",
+        example: "She practices yoga every morning.",
+        example_translation: "Elle pratique le yoga tous les matins.",
+        image_url: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800",
+        english: "yoga",
+        portuguese: "yoga"
+      },
+      {
+        input_word: "skating",
+        output_translation: "patinage",
+        input_language: "en",
+        output_language: "fr",
+        definition: "The activity of gliding on skates.",
+        definition_translation: "L'activité de glisser sur des patins.",
+        example: "Ice skating is popular in winter.",
+        example_translation: "Le patinage sur glace est populaire en hiver.",
+        image_url: "https://images.unsplash.com/photo-1520420097861-e4959843b682?w=800",
+        english: "skating",
+        portuguese: "patinage"
       }
     ]
   },
-  // Adicionar mais categorias aqui no futuro seguindo o mesmo padrão
+  animals: {
+    pt: [
+      { input_word: "dog", output_translation: "cachorro", input_language: "en", output_language: "pt", definition: "A domesticated carnivorous mammal that typically has a long snout, an acute sense of smell, non-retractable claws, and a barking, howling, or whining voice.", definition_translation: "Um mamífero carnívoro domesticado que normalmente tem um focinho longo, um sentido aguçado de olfato, garras não retráteis e uma voz que late, uiva ou geme.", example: "My dog loves to play fetch in the park.", example_translation: "Meu cachorro adora brincar de buscar no parque.", image_url: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800", english: "dog", portuguese: "cachorro" },
+      { input_word: "cat", output_translation: "gato", input_language: "en", output_language: "pt", definition: "A small domesticated carnivorous mammal with soft fur, a short snout, and retractable claws.", definition_translation: "Um pequeno mamífero carnívoro domesticado com pelagem macia, focinho curto e garras retráteis.", example: "The cat is sleeping on the couch.", example_translation: "O gato está dormindo no sofá.", image_url: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800", english: "cat", portuguese: "gato" },
+      { input_word: "bird", output_translation: "pássaro", input_language: "en", output_language: "pt", definition: "A warm-blooded egg-laying vertebrate distinguished by the possession of feathers, wings, and a beak.", definition_translation: "Um vertebrado de sangue quente que põe ovos, distinguido pela posse de penas, asas e um bico.", example: "A colorful bird is singing in the tree.", example_translation: "Um pássaro colorido está cantando na árvore.", image_url: "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=800", english: "bird", portuguese: "pássaro" },
+      { input_word: "fish", output_translation: "peixe", input_language: "en", output_language: "pt", definition: "A limbless cold-blooded vertebrate animal with gills and fins living wholly in water.", definition_translation: "Um animal vertebrado de sangue frio sem membros, com guelras e barbatanas, vivendo totalmente na água.", example: "There are many colorful fish in the aquarium.", example_translation: "Há muitos peixes coloridos no aquário.", image_url: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=800", english: "fish", portuguese: "peixe" },
+      { input_word: "elephant", output_translation: "elefante", input_language: "en", output_language: "pt", definition: "A large mammal with a trunk, long curved ivory tusks, and large ears, native to Africa and southern Asia.", definition_translation: "Um grande mamífero com uma tromba, longas presas de marfim curvadas e orelhas grandes, nativo da África e do sul da Ásia.", example: "The elephant is the largest land animal.", example_translation: "O elefante é o maior animal terrestre.", image_url: "https://images.unsplash.com/photo-1564760055775-d63b17a55c44?w=800", english: "elephant", portuguese: "elefante" },
+      { input_word: "lion", output_translation: "leão", input_language: "en", output_language: "pt", definition: "A large tawny-colored cat that lives in prides, found in Africa and northwestern India.", definition_translation: "Um grande felino de cor amarelada que vive em grupos, encontrado na África e no noroeste da Índia.", example: "The lion is known as the king of the jungle.", example_translation: "O leão é conhecido como o rei da selva.", image_url: "https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=800", english: "lion", portuguese: "leão" },
+      { input_word: "monkey", output_translation: "macaco", input_language: "en", output_language: "pt", definition: "A primate typically having a long tail, most kinds of which live in trees in tropical countries.", definition_translation: "Um primata tipicamente com uma cauda longa, a maioria dos quais vive em árvores em países tropicais.", example: "The monkey is swinging from tree to tree.", example_translation: "O macaco está balançando de árvore em árvore.", image_url: "https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?w=800", english: "monkey", portuguese: "macaco" },
+      { input_word: "horse", output_translation: "cavalo", input_language: "en", output_language: "pt", definition: "A large plant-eating domesticated mammal with solid hoofs and a flowing mane and tail, used for riding and to carry and pull loads.", definition_translation: "Um grande mamífero domesticado herbívoro com cascos sólidos e uma crina e cauda fluidas, usado para montaria e para carregar e puxar cargas.", example: "She loves riding her horse in the countryside.", example_translation: "Ela adora montar seu cavalo no campo.", image_url: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=800", english: "horse", portuguese: "cavalo" },
+      { input_word: "rabbit", output_translation: "coelho", input_language: "en", output_language: "pt", definition: "A small mammal with long ears, long hind legs, and a short tail.", definition_translation: "Um pequeno mamífero com orelhas longas, patas traseiras longas e uma cauda curta.", example: "The rabbit is eating carrots in the garden.", example_translation: "O coelho está comendo cenouras no jardim.", image_url: "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=800", english: "rabbit", portuguese: "coelho" },
+      { input_word: "turtle", output_translation: "tartaruga", input_language: "en", output_language: "pt", definition: "A reptile with a hard protective shell and flippers or webbed feet.", definition_translation: "Um réptil com uma casca protetora dura e nadadeiras ou pés palmados.", example: "The turtle is slowly moving across the beach.", example_translation: "A tartaruga está se movendo lentamente pela praia.", image_url: "https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=800", english: "turtle", portuguese: "tartaruga" },
+      { input_word: "bear", output_translation: "urso", input_language: "en", output_language: "pt", definition: "A large, heavy mammal with thick fur and a very short tail.", definition_translation: "Um mamífero grande e pesado com pelagem grossa e uma cauda muito curta.", example: "The bear is fishing for salmon in the river.", example_translation: "O urso está pescando salmão no rio.", image_url: "https://images.unsplash.com/photo-1589656966895-2f33e7653819?w=800", english: "bear", portuguese: "urso" },
+      { input_word: "butterfly", output_translation: "borboleta", input_language: "en", output_language: "pt", definition: "An insect with two pairs of large wings that are covered with tiny scales, usually brightly colored.", definition_translation: "Um inseto com dois pares de asas grandes cobertas com pequenas escamas, geralmente de cores vivas.", example: "A beautiful butterfly landed on the flower.", example_translation: "Uma linda borboleta pousou na flor.", image_url: "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=800", english: "butterfly", portuguese: "borboleta" }
+    ],
+    en: [
+      { input_word: "cachorro", output_translation: "dog", input_language: "pt", output_language: "en", definition: "Um mamífero carnívoro domesticado.", definition_translation: "A domesticated carnivorous mammal.", example: "Meu cachorro adora brincar.", example_translation: "My dog loves to play.", image_url: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800", english: "dog", portuguese: "cachorro" },
+      { input_word: "gato", output_translation: "cat", input_language: "pt", output_language: "en", definition: "Um pequeno mamífero carnívoro domesticado.", definition_translation: "A small domesticated carnivorous mammal.", example: "O gato está dormindo.", example_translation: "The cat is sleeping.", image_url: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800", english: "cat", portuguese: "gato" },
+      { input_word: "pássaro", output_translation: "bird", input_language: "pt", output_language: "en", definition: "Um vertebrado de sangue quente que põe ovos.", definition_translation: "A warm-blooded egg-laying vertebrate.", example: "Um pássaro está cantando.", example_translation: "A bird is singing.", image_url: "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=800", english: "bird", portuguese: "pássaro" },
+      { input_word: "peixe", output_translation: "fish", input_language: "pt", output_language: "en", definition: "Um animal vertebrado aquático.", definition_translation: "An aquatic vertebrate animal.", example: "Há peixes no aquário.", example_translation: "There are fish in the aquarium.", image_url: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=800", english: "fish", portuguese: "peixe" },
+      { input_word: "elefante", output_translation: "elephant", input_language: "pt", output_language: "en", definition: "Um grande mamífero com tromba.", definition_translation: "A large mammal with a trunk.", example: "O elefante é muito grande.", example_translation: "The elephant is very big.", image_url: "https://images.unsplash.com/photo-1564760055775-d63b17a55c44?w=800", english: "elephant", portuguese: "elefante" },
+      { input_word: "leão", output_translation: "lion", input_language: "pt", output_language: "en", definition: "Um grande felino selvagem.", definition_translation: "A large wild cat.", example: "O leão é o rei da selva.", example_translation: "The lion is the king of the jungle.", image_url: "https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=800", english: "lion", portuguese: "leão" },
+      { input_word: "macaco", output_translation: "monkey", input_language: "pt", output_language: "en", definition: "Um primata com cauda longa.", definition_translation: "A primate with a long tail.", example: "O macaco está nas árvores.", example_translation: "The monkey is in the trees.", image_url: "https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?w=800", english: "monkey", portuguese: "macaco" },
+      { input_word: "cavalo", output_translation: "horse", input_language: "pt", output_language: "en", definition: "Um mamífero domesticado usado para montaria.", definition_translation: "A domesticated mammal used for riding.", example: "Ela monta seu cavalo.", example_translation: "She rides her horse.", image_url: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=800", english: "horse", portuguese: "cavalo" },
+      { input_word: "coelho", output_translation: "rabbit", input_language: "pt", output_language: "en", definition: "Um pequeno mamífero com orelhas longas.", definition_translation: "A small mammal with long ears.", example: "O coelho está no jardim.", example_translation: "The rabbit is in the garden.", image_url: "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=800", english: "rabbit", portuguese: "coelho" },
+      { input_word: "tartaruga", output_translation: "turtle", input_language: "pt", output_language: "en", definition: "Um réptil com casca protetora.", definition_translation: "A reptile with a protective shell.", example: "A tartaruga é lenta.", example_translation: "The turtle is slow.", image_url: "https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=800", english: "turtle", portuguese: "tartaruga" },
+      { input_word: "urso", output_translation: "bear", input_language: "pt", output_language: "en", definition: "Um mamífero grande e pesado.", definition_translation: "A large and heavy mammal.", example: "O urso está pescando.", example_translation: "The bear is fishing.", image_url: "https://images.unsplash.com/photo-1589656966895-2f33e7653819?w=800", english: "bear", portuguese: "urso" },
+      { input_word: "borboleta", output_translation: "butterfly", input_language: "pt", output_language: "en", definition: "Um inseto com asas coloridas.", definition_translation: "An insect with colorful wings.", example: "Uma borboleta pousou na flor.", example_translation: "A butterfly landed on the flower.", image_url: "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=800", english: "butterfly", portuguese: "borboleta" }
+    ],
+    es: [
+      { input_word: "dog", output_translation: "perro", input_language: "en", output_language: "es", definition: "A domesticated carnivorous mammal.", definition_translation: "Un mamífero carnívoro domesticado.", example: "My dog loves to play.", example_translation: "Mi perro adora jugar.", image_url: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800", english: "dog", portuguese: "perro" },
+      { input_word: "cat", output_translation: "gato", input_language: "en", output_language: "es", definition: "A small domesticated carnivorous mammal.", definition_translation: "Un pequeño mamífero carnívoro domesticado.", example: "The cat is sleeping.", example_translation: "El gato está durmiendo.", image_url: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800", english: "cat", portuguese: "gato" },
+      { input_word: "bird", output_translation: "pájaro", input_language: "en", output_language: "es", definition: "A warm-blooded egg-laying vertebrate.", definition_translation: "Un vertebrado ovíparo de sangre caliente.", example: "A bird is singing.", example_translation: "Un pájaro está cantando.", image_url: "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=800", english: "bird", portuguese: "pájaro" },
+      { input_word: "fish", output_translation: "pez", input_language: "en", output_language: "es", definition: "An aquatic vertebrate animal.", definition_translation: "Un animal vertebrado acuático.", example: "There are fish in the aquarium.", example_translation: "Hay peces en el acuario.", image_url: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=800", english: "fish", portuguese: "pez" },
+      { input_word: "elephant", output_translation: "elefante", input_language: "en", output_language: "es", definition: "A large mammal with a trunk.", definition_translation: "Un gran mamífero con trompa.", example: "The elephant is very big.", example_translation: "El elefante es muy grande.", image_url: "https://images.unsplash.com/photo-1564760055775-d63b17a55c44?w=800", english: "elephant", portuguese: "elefante" },
+      { input_word: "lion", output_translation: "león", input_language: "en", output_language: "es", definition: "A large wild cat.", definition_translation: "Un gran felino salvaje.", example: "The lion is the king of the jungle.", example_translation: "El león es el rey de la selva.", image_url: "https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=800", english: "lion", portuguese: "león" },
+      { input_word: "monkey", output_translation: "mono", input_language: "en", output_language: "es", definition: "A primate with a long tail.", definition_translation: "Un primate con cola larga.", example: "The monkey is in the trees.", example_translation: "El mono está en los árboles.", image_url: "https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?w=800", english: "monkey", portuguese: "mono" },
+      { input_word: "horse", output_translation: "caballo", input_language: "en", output_language: "es", definition: "A domesticated mammal used for riding.", definition_translation: "Un mamífero domesticado usado para montar.", example: "She rides her horse.", example_translation: "Ella monta su caballo.", image_url: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=800", english: "horse", portuguese: "caballo" },
+      { input_word: "rabbit", output_translation: "conejo", input_language: "en", output_language: "es", definition: "A small mammal with long ears.", definition_translation: "Un pequeño mamífero con orejas largas.", example: "The rabbit is in the garden.", example_translation: "El conejo está en el jardín.", image_url: "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=800", english: "rabbit", portuguese: "conejo" },
+      { input_word: "turtle", output_translation: "tortuga", input_language: "en", output_language: "es", definition: "A reptile with a protective shell.", definition_translation: "Un reptil con caparazón protector.", example: "The turtle is slow.", example_translation: "La tortuga es lenta.", image_url: "https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=800", english: "turtle", portuguese: "tortuga" },
+      { input_word: "bear", output_translation: "oso", input_language: "en", output_language: "es", definition: "A large and heavy mammal.", definition_translation: "Un mamífero grande y pesado.", example: "The bear is fishing.", example_translation: "El oso está pescando.", image_url: "https://images.unsplash.com/photo-1589656966895-2f33e7653819?w=800", english: "bear", portuguese: "oso" },
+      { input_word: "butterfly", output_translation: "mariposa", input_language: "en", output_language: "es", definition: "An insect with colorful wings.", definition_translation: "Un insecto con alas coloridas.", example: "A butterfly landed on the flower.", example_translation: "Una mariposa aterrizó en la flor.", image_url: "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=800", english: "butterfly", portuguese: "mariposa" }
+    ],
+    fr: [
+      { input_word: "dog", output_translation: "chien", input_language: "en", output_language: "fr", definition: "A domesticated carnivorous mammal.", definition_translation: "Un mammifère carnivore domestiqué.", example: "My dog loves to play.", example_translation: "Mon chien adore jouer.", image_url: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800", english: "dog", portuguese: "chien" },
+      { input_word: "cat", output_translation: "chat", input_language: "en", output_language: "fr", definition: "A small domesticated carnivorous mammal.", definition_translation: "Un petit mammifère carnivore domestiqué.", example: "The cat is sleeping.", example_translation: "Le chat dort.", image_url: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800", english: "cat", portuguese: "chat" },
+      { input_word: "bird", output_translation: "oiseau", input_language: "en", output_language: "fr", definition: "A warm-blooded egg-laying vertebrate.", definition_translation: "Un vertébré ovipare à sang chaud.", example: "A bird is singing.", example_translation: "Un oiseau chante.", image_url: "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=800", english: "bird", portuguese: "oiseau" },
+      { input_word: "fish", output_translation: "poisson", input_language: "en", output_language: "fr", definition: "An aquatic vertebrate animal.", definition_translation: "Un animal vertébré aquatique.", example: "There are fish in the aquarium.", example_translation: "Il y a des poissons dans l'aquarium.", image_url: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=800", english: "fish", portuguese: "poisson" },
+      { input_word: "elephant", output_translation: "éléphant", input_language: "en", output_language: "fr", definition: "A large mammal with a trunk.", definition_translation: "Un grand mammifère avec une trompe.", example: "The elephant is very big.", example_translation: "L'éléphant est très grand.", image_url: "https://images.unsplash.com/photo-1564760055775-d63b17a55c44?w=800", english: "elephant", portuguese: "éléphant" },
+      { input_word: "lion", output_translation: "lion", input_language: "en", output_language: "fr", definition: "A large wild cat.", definition_translation: "Un grand félin sauvage.", example: "The lion is the king of the jungle.", example_translation: "Le lion est le roi de la jungle.", image_url: "https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=800", english: "lion", portuguese: "lion" },
+      { input_word: "monkey", output_translation: "singe", input_language: "en", output_language: "fr", definition: "A primate with a long tail.", definition_translation: "Un primate avec une longue queue.", example: "The monkey is in the trees.", example_translation: "Le singe est dans les arbres.", image_url: "https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?w=800", english: "monkey", portuguese: "singe" },
+      { input_word: "horse", output_translation: "cheval", input_language: "en", output_language: "fr", definition: "A domesticated mammal used for riding.", definition_translation: "Un mammifère domestiqué utilisé pour l'équitation.", example: "She rides her horse.", example_translation: "Elle monte son cheval.", image_url: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=800", english: "horse", portuguese: "cheval" },
+      { input_word: "rabbit", output_translation: "lapin", input_language: "en", output_language: "fr", definition: "A small mammal with long ears.", definition_translation: "Un petit mammifère avec de longues oreilles.", example: "The rabbit is in the garden.", example_translation: "Le lapin est dans le jardin.", image_url: "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=800", english: "rabbit", portuguese: "lapin" },
+      { input_word: "turtle", output_translation: "tortue", input_language: "en", output_language: "fr", definition: "A reptile with a protective shell.", definition_translation: "Un reptile avec une carapace protectrice.", example: "The turtle is slow.", example_translation: "La tortue est lente.", image_url: "https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=800", english: "turtle", portuguese: "tortue" },
+      { input_word: "bear", output_translation: "ours", input_language: "en", output_language: "fr", definition: "A large and heavy mammal.", definition_translation: "Un mammifère grand et lourd.", example: "The bear is fishing.", example_translation: "L'ours pêche.", image_url: "https://images.unsplash.com/photo-1589656966895-2f33e7653819?w=800", english: "bear", portuguese: "ours" },
+      { input_word: "butterfly", output_translation: "papillon", input_language: "en", output_language: "fr", definition: "An insect with colorful wings.", definition_translation: "Un insecte avec des ailes colorées.", example: "A butterfly landed on the flower.", example_translation: "Un papillon s'est posé sur la fleur.", image_url: "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=800", english: "butterfly", portuguese: "papillon" }
+    ]
+  },
+  colors: {
+    pt: [
+      { input_word: "red", output_translation: "vermelho", input_language: "en", output_language: "pt", definition: "The color at the end of the spectrum next to orange and opposite violet, as of blood, fire, or rubies.", definition_translation: "A cor no fim do espectro ao lado do laranja e oposta ao violeta, como sangue, fogo ou rubis.", example: "She is wearing a red dress.", example_translation: "Ela está usando um vestido vermelho.", image_url: "https://images.unsplash.com/photo-1525328437458-0c4d4db7cab4?w=800", english: "red", portuguese: "vermelho" },
+      { input_word: "blue", output_translation: "azul", input_language: "en", output_language: "pt", definition: "The color of the clear sky in the daytime.", definition_translation: "A cor do céu claro durante o dia.", example: "The ocean looks blue today.", example_translation: "O oceano parece azul hoje.", image_url: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800", english: "blue", portuguese: "azul" },
+      { input_word: "green", output_translation: "verde", input_language: "en", output_language: "pt", definition: "The color of grass and leaves.", definition_translation: "A cor da grama e das folhas.", example: "I love the green trees in spring.", example_translation: "Eu amo as árvores verdes na primavera.", image_url: "https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?w=800", english: "green", portuguese: "verde" },
+      { input_word: "yellow", output_translation: "amarelo", input_language: "en", output_language: "pt", definition: "The color of gold, butter, or ripe lemons.", definition_translation: "A cor do ouro, manteiga ou limões maduros.", example: "The sun is bright yellow.", example_translation: "O sol é amarelo brilhante.", image_url: "https://images.unsplash.com/photo-1513569143478-b38b2c0ef97f?w=800", english: "yellow", portuguese: "amarelo" },
+      { input_word: "orange", output_translation: "laranja", input_language: "en", output_language: "pt", definition: "A color intermediate between red and yellow.", definition_translation: "Uma cor intermediária entre vermelho e amarelo.", example: "The sunset has beautiful orange colors.", example_translation: "O pôr do sol tem lindas cores laranjas.", image_url: "https://images.unsplash.com/photo-1557800636-894a64c1696f?w=800", english: "orange", portuguese: "laranja" },
+      { input_word: "purple", output_translation: "roxo", input_language: "en", output_language: "pt", definition: "A color intermediate between red and blue.", definition_translation: "Uma cor intermediária entre vermelho e azul.", example: "She loves purple flowers.", example_translation: "Ela ama flores roxas.", image_url: "https://images.unsplash.com/photo-1519999482648-25049ddd37b1?w=800", english: "purple", portuguese: "roxo" },
+      { input_word: "pink", output_translation: "rosa", input_language: "en", output_language: "pt", definition: "A pale red color.", definition_translation: "Uma cor vermelha pálida.", example: "The baby is wearing a pink outfit.", example_translation: "O bebê está usando uma roupa rosa.", image_url: "https://images.unsplash.com/photo-1516815231560-8f41ec531527?w=800", english: "pink", portuguese: "rosa" },
+      { input_word: "brown", output_translation: "marrom", input_language: "en", output_language: "pt", definition: "The color of earth or wood.", definition_translation: "A cor da terra ou da madeira.", example: "He has brown eyes.", example_translation: "Ele tem olhos marrons.", image_url: "https://images.unsplash.com/photo-1556139954-ec19cfc61e46?w=800", english: "brown", portuguese: "marrom" },
+      { input_word: "black", output_translation: "preto", input_language: "en", output_language: "pt", definition: "The darkest color, like night or coal.", definition_translation: "A cor mais escura, como a noite ou o carvão.", example: "She has a black cat.", example_translation: "Ela tem um gato preto.", image_url: "https://images.unsplash.com/photo-1525328437458-0c4d4db7cab4?w=800", english: "black", portuguese: "preto" },
+      { input_word: "white", output_translation: "branco", input_language: "en", output_language: "pt", definition: "The lightest color, like snow or milk.", definition_translation: "A cor mais clara, como a neve ou o leite.", example: "The snow is pure white.", example_translation: "A neve é branca pura.", image_url: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800", english: "white", portuguese: "branco" },
+      { input_word: "gray", output_translation: "cinza", input_language: "en", output_language: "pt", definition: "A color intermediate between black and white.", definition_translation: "Uma cor intermediária entre preto e branco.", example: "The sky is gray and cloudy.", example_translation: "O céu está cinza e nublado.", image_url: "https://images.unsplash.com/photo-1520420097861-e4959843b682?w=800", english: "gray", portuguese: "cinza" },
+      { input_word: "silver", output_translation: "prateado", input_language: "en", output_language: "pt", definition: "A shiny grayish-white metallic color.", definition_translation: "Uma cor metálica brilhante entre branco e cinza.", example: "She wears a silver necklace.", example_translation: "Ela usa um colar prateado.", image_url: "https://images.unsplash.com/photo-1569173112611-52a7cd38bea9?w=800", english: "silver", portuguese: "prateado" }
+    ],
+    en: [
+      { input_word: "vermelho", output_translation: "red", input_language: "pt", output_language: "en", definition: "A cor do sangue ou do fogo.", definition_translation: "The color of blood or fire.", example: "Ela usa um vestido vermelho.", example_translation: "She wears a red dress.", image_url: "https://images.unsplash.com/photo-1525328437458-0c4d4db7cab4?w=800", english: "red", portuguese: "vermelho" },
+      { input_word: "azul", output_translation: "blue", input_language: "pt", output_language: "en", definition: "A cor do céu.", definition_translation: "The color of the sky.", example: "O oceano é azul.", example_translation: "The ocean is blue.", image_url: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800", english: "blue", portuguese: "azul" },
+      { input_word: "verde", output_translation: "green", input_language: "pt", output_language: "en", definition: "A cor da grama.", definition_translation: "The color of grass.", example: "As árvores são verdes.", example_translation: "The trees are green.", image_url: "https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?w=800", english: "green", portuguese: "verde" },
+      { input_word: "amarelo", output_translation: "yellow", input_language: "pt", output_language: "en", definition: "A cor do sol.", definition_translation: "The color of the sun.", example: "O sol é amarelo.", example_translation: "The sun is yellow.", image_url: "https://images.unsplash.com/photo-1513569143478-b38b2c0ef97f?w=800", english: "yellow", portuguese: "amarelo" },
+      { input_word: "laranja", output_translation: "orange", input_language: "pt", output_language: "en", definition: "Uma cor entre vermelho e amarelo.", definition_translation: "A color between red and yellow.", example: "O pôr do sol é laranja.", example_translation: "The sunset is orange.", image_url: "https://images.unsplash.com/photo-1557800636-894a64c1696f?w=800", english: "orange", portuguese: "laranja" },
+      { input_word: "roxo", output_translation: "purple", input_language: "pt", output_language: "en", definition: "Uma cor entre vermelho e azul.", definition_translation: "A color between red and blue.", example: "Ela ama flores roxas.", example_translation: "She loves purple flowers.", image_url: "https://images.unsplash.com/photo-1519999482648-25049ddd37b1?w=800", english: "purple", portuguese: "roxo" },
+      { input_word: "rosa", output_translation: "pink", input_language: "pt", output_language: "en", definition: "Uma cor vermelha clara.", definition_translation: "A light red color.", example: "O bebê usa rosa.", example_translation: "The baby wears pink.", image_url: "https://images.unsplash.com/photo-1516815231560-8f41ec531527?w=800", english: "pink", portuguese: "rosa" },
+      { input_word: "marrom", output_translation: "brown", input_language: "pt", output_language: "en", definition: "A cor da madeira.", definition_translation: "The color of wood.", example: "Ele tem olhos marrons.", example_translation: "He has brown eyes.", image_url: "https://images.unsplash.com/photo-1556139954-ec19cfc61e46?w=800", english: "brown", portuguese: "marrom" },
+      { input_word: "preto", output_translation: "black", input_language: "pt", output_language: "en", definition: "A cor mais escura.", definition_translation: "The darkest color.", example: "Ela tem um gato preto.", example_translation: "She has a black cat.", image_url: "https://images.unsplash.com/photo-1525328437458-0c4d4db7cab4?w=800", english: "black", portuguese: "preto" },
+      { input_word: "branco", output_translation: "white", input_language: "pt", output_language: "en", definition: "A cor mais clara.", definition_translation: "The lightest color.", example: "A neve é branca.", example_translation: "The snow is white.", image_url: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800", english: "white", portuguese: "branco" },
+      { input_word: "cinza", output_translation: "gray", input_language: "pt", output_language: "en", definition: "Uma cor entre preto e branco.", definition_translation: "A color between black and white.", example: "O céu está cinza.", example_translation: "The sky is gray.", image_url: "https://images.unsplash.com/photo-1520420097861-e4959843b682?w=800", english: "gray", portuguese: "cinza" },
+      { input_word: "prateado", output_translation: "silver", input_language: "pt", output_language: "en", definition: "Uma cor metálica brilhante.", definition_translation: "A shiny metallic color.", example: "Ela usa um colar prateado.", example_translation: "She wears a silver necklace.", image_url: "https://images.unsplash.com/photo-1569173112611-52a7cd38bea9?w=800", english: "silver", portuguese: "prateado" }
+    ],
+    es: [
+      { input_word: "red", output_translation: "rojo", input_language: "en", output_language: "es", definition: "The color of blood or fire.", definition_translation: "El color de la sangre o el fuego.", example: "She wears a red dress.", example_translation: "Ella usa un vestido rojo.", image_url: "https://images.unsplash.com/photo-1525328437458-0c4d4db7cab4?w=800", english: "red", portuguese: "rojo" },
+      { input_word: "blue", output_translation: "azul", input_language: "en", output_language: "es", definition: "The color of the sky.", definition_translation: "El color del cielo.", example: "The ocean is blue.", example_translation: "El océano es azul.", image_url: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800", english: "blue", portuguese: "azul" },
+      { input_word: "green", output_translation: "verde", input_language: "en", output_language: "es", definition: "The color of grass.", definition_translation: "El color de la hierba.", example: "The trees are green.", example_translation: "Los árboles son verdes.", image_url: "https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?w=800", english: "green", portuguese: "verde" },
+      { input_word: "yellow", output_translation: "amarillo", input_language: "en", output_language: "es", definition: "The color of the sun.", definition_translation: "El color del sol.", example: "The sun is yellow.", example_translation: "El sol es amarillo.", image_url: "https://images.unsplash.com/photo-1513569143478-b38b2c0ef97f?w=800", english: "yellow", portuguese: "amarillo" },
+      { input_word: "orange", output_translation: "naranja", input_language: "en", output_language: "es", definition: "A color between red and yellow.", definition_translation: "Un color entre rojo y amarillo.", example: "The sunset is orange.", example_translation: "El atardecer es naranja.", image_url: "https://images.unsplash.com/photo-1557800636-894a64c1696f?w=800", english: "orange", portuguese: "naranja" },
+      { input_word: "purple", output_translation: "morado", input_language: "en", output_language: "es", definition: "A color between red and blue.", definition_translation: "Un color entre rojo y azul.", example: "She loves purple flowers.", example_translation: "Ella ama las flores moradas.", image_url: "https://images.unsplash.com/photo-1519999482648-25049ddd37b1?w=800", english: "purple", portuguese: "morado" },
+      { input_word: "pink", output_translation: "rosa", input_language: "en", output_language: "es", definition: "A light red color.", definition_translation: "Un color rojo claro.", example: "The baby wears pink.", example_translation: "El bebé usa rosa.", image_url: "https://images.unsplash.com/photo-1516815231560-8f41ec531527?w=800", english: "pink", portuguese: "rosa" },
+      { input_word: "brown", output_translation: "marrón", input_language: "en", output_language: "es", definition: "The color of wood.", definition_translation: "El color de la madera.", example: "He has brown eyes.", example_translation: "Él tiene ojos marrones.", image_url: "https://images.unsplash.com/photo-1556139954-ec19cfc61e46?w=800", english: "brown", portuguese: "marrón" },
+      { input_word: "black", output_translation: "negro", input_language: "en", output_language: "es", definition: "The darkest color.", definition_translation: "El color más oscuro.", example: "She has a black cat.", example_translation: "Ella tiene un gato negro.", image_url: "https://images.unsplash.com/photo-1525328437458-0c4d4db7cab4?w=800", english: "black", portuguese: "negro" },
+      { input_word: "white", output_translation: "blanco", input_language: "en", output_language: "es", definition: "The lightest color.", definition_translation: "El color más claro.", example: "The snow is white.", example_translation: "La nieve es blanca.", image_url: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800", english: "white", portuguese: "blanco" },
+      { input_word: "gray", output_translation: "gris", input_language: "en", output_language: "es", definition: "A color between black and white.", definition_translation: "Un color entre negro y blanco.", example: "The sky is gray.", example_translation: "El cielo está gris.", image_url: "https://images.unsplash.com/photo-1520420097861-e4959843b682?w=800", english: "gray", portuguese: "gris" },
+      { input_word: "silver", output_translation: "plateado", input_language: "en", output_language: "es", definition: "A shiny metallic color.", definition_translation: "Un color metálico brillante.", example: "She wears a silver necklace.", example_translation: "Ella usa un collar plateado.", image_url: "https://images.unsplash.com/photo-1569173112611-52a7cd38bea9?w=800", english: "silver", portuguese: "plateado" }
+    ],
+    fr: [
+      { input_word: "red", output_translation: "rouge", input_language: "en", output_language: "fr", definition: "The color of blood or fire.", definition_translation: "La couleur du sang ou du feu.", example: "She wears a red dress.", example_translation: "Elle porte une robe rouge.", image_url: "https://images.unsplash.com/photo-1525328437458-0c4d4db7cab4?w=800", english: "red", portuguese: "rouge" },
+      { input_word: "blue", output_translation: "bleu", input_language: "en", output_language: "fr", definition: "The color of the sky.", definition_translation: "La couleur du ciel.", example: "The ocean is blue.", example_translation: "L'océan est bleu.", image_url: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800", english: "blue", portuguese: "bleu" },
+      { input_word: "green", output_translation: "vert", input_language: "en", output_language: "fr", definition: "The color of grass.", definition_translation: "La couleur de l'herbe.", example: "The trees are green.", example_translation: "Les arbres sont verts.", image_url: "https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?w=800", english: "green", portuguese: "vert" },
+      { input_word: "yellow", output_translation: "jaune", input_language: "en", output_language: "fr", definition: "The color of the sun.", definition_translation: "La couleur du soleil.", example: "The sun is yellow.", example_translation: "Le soleil est jaune.", image_url: "https://images.unsplash.com/photo-1513569143478-b38b2c0ef97f?w=800", english: "yellow", portuguese: "jaune" },
+      { input_word: "orange", output_translation: "orange", input_language: "en", output_language: "fr", definition: "A color between red and yellow.", definition_translation: "Une couleur entre rouge et jaune.", example: "The sunset is orange.", example_translation: "Le coucher de soleil est orange.", image_url: "https://images.unsplash.com/photo-1557800636-894a64c1696f?w=800", english: "orange", portuguese: "orange" },
+      { input_word: "purple", output_translation: "violet", input_language: "en", output_language: "fr", definition: "A color between red and blue.", definition_translation: "Une couleur entre rouge et bleu.", example: "She loves purple flowers.", example_translation: "Elle aime les fleurs violettes.", image_url: "https://images.unsplash.com/photo-1519999482648-25049ddd37b1?w=800", english: "purple", portuguese: "violet" },
+      { input_word: "pink", output_translation: "rose", input_language: "en", output_language: "fr", definition: "A light red color.", definition_translation: "Une couleur rouge clair.", example: "The baby wears pink.", example_translation: "Le bébé porte du rose.", image_url: "https://images.unsplash.com/photo-1516815231560-8f41ec531527?w=800", english: "pink", portuguese: "rose" },
+      { input_word: "brown", output_translation: "marron", input_language: "en", output_language: "fr", definition: "The color of wood.", definition_translation: "La couleur du bois.", example: "He has brown eyes.", example_translation: "Il a les yeux marron.", image_url: "https://images.unsplash.com/photo-1556139954-ec19cfc61e46?w=800", english: "brown", portuguese: "marron" },
+      { input_word: "black", output_translation: "noir", input_language: "en", output_language: "fr", definition: "The darkest color.", definition_translation: "La couleur la plus sombre.", example: "She has a black cat.", example_translation: "Elle a un chat noir.", image_url: "https://images.unsplash.com/photo-1525328437458-0c4d4db7cab4?w=800", english: "black", portuguese: "noir" },
+      { input_word: "white", output_translation: "blanc", input_language: "en", output_language: "fr", definition: "The lightest color.", definition_translation: "La couleur la plus claire.", example: "The snow is white.", example_translation: "La neige est blanche.", image_url: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800", english: "white", portuguese: "blanc" },
+      { input_word: "gray", output_translation: "gris", input_language: "en", output_language: "fr", definition: "A color between black and white.", definition_translation: "Une couleur entre noir et blanc.", example: "The sky is gray.", example_translation: "Le ciel est gris.", image_url: "https://images.unsplash.com/photo-1520420097861-e4959843b682?w=800", english: "gray", portuguese: "gris" },
+      { input_word: "silver", output_translation: "argenté", input_language: "en", output_language: "fr", definition: "A shiny metallic color.", definition_translation: "Une couleur métallique brillante.", example: "She wears a silver necklace.", example_translation: "Elle porte un collier argenté.", image_url: "https://images.unsplash.com/photo-1569173112611-52a7cd38bea9?w=800", english: "silver", portuguese: "argenté" }
+    ]
+  },
   house: {},
   objects: {},
   clothes: {},

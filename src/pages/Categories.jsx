@@ -55,6 +55,18 @@ const CATEGORIES = [
     name: "Profissões",
     icon: "👔",
     description: "Carreiras e ocupações profissionais"
+  },
+  {
+    id: "animals",
+    name: "Animais",
+    icon: "🐶",
+    description: "Animais domésticos e selvagens"
+  },
+  {
+    id: "colors",
+    name: "Cores",
+    icon: "🎨",
+    description: "Cores e tonalidades diversas"
   }
 ];
 
@@ -209,7 +221,7 @@ export default function Categories() {
                   </CardHeader>
                   <CardContent>
                     <Badge variant="outline" className="text-sm">
-                      10 palavras
+                      12 palavras
                     </Badge>
                   </CardContent>
                 </Card>
