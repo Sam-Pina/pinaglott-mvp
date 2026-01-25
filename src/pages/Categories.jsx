@@ -65,7 +65,6 @@ export default function Categories() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [flashcards, setFlashcards] = useState([]);
   const [inputLanguage, setInputLanguage] = useState('en');
   const [outputLanguage, setOutputLanguage] = useState('pt');
@@ -91,14 +90,7 @@ export default function Categories() {
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
-    setSelectedLanguage(null);
-    setFlashcards([]);
-  };
-
-  const handleLanguageSelect = (languageCode) => {
-    setSelectedLanguage(languageCode);
-    setOutputLanguage(languageCode);
-    loadFlashcards(selectedCategory.id, inputLanguage, languageCode);
+    loadFlashcards(category.id, inputLanguage, outputLanguage);
   };
 
   const loadFlashcards = (categoryId, inLang, outLang) => {
@@ -121,12 +113,6 @@ export default function Categories() {
 
   const handleBackToCategories = () => {
     setSelectedCategory(null);
-    setSelectedLanguage(null);
-    setFlashcards([]);
-  };
-
-  const handleBackToLanguages = () => {
-    setSelectedLanguage(null);
     setFlashcards([]);
     setStudyMode(false);
     setCurrentStudyIndex(0);
@@ -235,63 +221,6 @@ export default function Categories() {
     );
   }
 
-  // Tela de Seleção de Idioma
-  if (selectedCategory && !selectedLanguage) {
-    return (
-      <div className="min-h-screen py-8 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <Button
-            variant="outline"
-            onClick={handleBackToCategories}
-            className="mb-6 border-gray-200"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar para Categorias
-          </Button>
-
-          <div className="text-center mb-10">
-            <div className="flex items-center justify-center mb-4">
-              <span className="text-5xl mr-3">{selectedCategory.icon}</span>
-              <h1 className="text-3xl font-bold text-gray-800">{selectedCategory.name}</h1>
-            </div>
-            <p className="text-gray-600 max-w-2xl mx-auto mb-2">
-              Selecione o idioma para o qual deseja traduzir as palavras desta categoria.
-            </p>
-            <Badge variant="outline" className="text-sm">
-              10 palavras disponíveis
-            </Badge>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-            {Object.entries(LANGUAGES).map(([code, lang]) => (
-              <motion.div
-                key={code}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Card
-                  className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-                  onClick={() => handleLanguageSelect(code)}
-                >
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-3xl">{lang.flag}</span>
-                        <CardTitle className="text-xl">{lang.name}</CardTitle>
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-gray-400" />
-                    </div>
-                  </CardHeader>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   // Modo de Estudo
   if (studyMode && flashcards.length > 0) {
     const currentCard = flashcards[currentStudyIndex];
@@ -390,11 +319,11 @@ export default function Categories() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
           <Button
             variant="outline"
-            onClick={handleBackToLanguages}
+            onClick={handleBackToCategories}
             className="border-gray-200"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar para Idiomas
+            Voltar para Categorias
           </Button>
 
           <div className="flex items-center space-x-3">
@@ -402,8 +331,8 @@ export default function Categories() {
             <div className="text-right">
               <h2 className="text-lg font-bold text-gray-800">{selectedCategory.name}</h2>
               <p className="text-sm text-gray-500 flex items-center">
-                <span className="mr-2">{LANGUAGES[selectedLanguage].flag}</span>
-                {LANGUAGES[selectedLanguage].name}
+                <span className="mr-2">{LANGUAGES[outputLanguage].flag}</span>
+                {LANGUAGES[outputLanguage].name}
               </p>
             </div>
           </div>
@@ -450,7 +379,6 @@ export default function Categories() {
                 value={outputLanguage}
                 onValueChange={(value) => {
                   setOutputLanguage(value);
-                  setSelectedLanguage(value);
                   if (selectedCategory) {
                     loadFlashcards(selectedCategory.id, inputLanguage, value);
                   }
