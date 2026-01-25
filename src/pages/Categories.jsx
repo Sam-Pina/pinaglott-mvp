@@ -163,12 +163,23 @@ export default function Categories() {
     }
 
     if (markAsKnown) {
+      const newMasteryLevel = Math.min(5, (currentCard.mastery_level || 0) + 1);
+      
+      const updatedCard = {
+        ...currentCard,
+        mastery_level: newMasteryLevel,
+        times_reviewed: (currentCard.times_reviewed || 0) + 1,
+        times_reviewed_today: (currentCard.times_reviewed_today || 0) + 1,
+        times_reviewed_this_week: (currentCard.times_reviewed_this_week || 0) + 1,
+        last_review_date: new Date().toISOString()
+      };
+      
       try {
-        const { id, isSaved, ...dataToSave } = currentCard;
+        const { id, isSaved, ...dataToSave } = updatedCard;
         const savedCard = await Word.create(dataToSave);
         
         setFlashcards(prev => prev.map((card, index) => 
-          index === currentStudyIndex ? { ...card, isSaved: true } : card
+          index === currentStudyIndex ? { ...updatedCard, isSaved: true } : card
         ));
         
         setStudySessionData(prev => ({
