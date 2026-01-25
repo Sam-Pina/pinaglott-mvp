@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { User } from "@/entities/User";
-import { Search, Book, Home, User as UserIcon, LogIn, Menu, X, Shield } from "lucide-react";
+import { Search, Book, Home, User as UserIcon, LogIn, Menu, X, Shield, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Layout({ children, currentPageName }) {
@@ -127,6 +126,18 @@ export default function Layout({ children, currentPageName }) {
                 <Search size={18} />
                 <span>Pesquisar</span>
               </Link>
+
+              <Link 
+                to={createPageUrl("Categories")} 
+                className={`px-4 py-2 rounded-md flex items-center space-x-1 ${
+                  isActive(createPageUrl("Categories")) 
+                    ? "bg-blue-50 text-blue-600 font-medium" 
+                    : "text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                <Layers size={18} />
+                <span>Categorias</span>
+              </Link>
               
               {isLoggedIn && (
                 <>
@@ -233,6 +244,19 @@ export default function Layout({ children, currentPageName }) {
               >
                 <Search size={20} />
                 <span>Pesquisar</span>
+              </Link>
+
+              <Link 
+                to={createPageUrl("Categories")} 
+                className={`px-4 py-3 rounded-md flex items-center space-x-2 ${
+                  isActive(createPageUrl("Categories")) 
+                    ? "bg-blue-50 text-blue-600 font-medium" 
+                    : "text-gray-600"
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Layers size={20} />
+                <span>Categorias</span>
               </Link>
               
               {isLoggedIn && (

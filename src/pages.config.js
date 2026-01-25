@@ -3,6 +3,7 @@ import Flashcards from './pages/Flashcards';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Search from './pages/Search';
+import Categories from './pages/Categories';
 import __Layout from './Layout.jsx';
 
 
@@ -12,6 +13,7 @@ export const PAGES = {
     "Home": Home,
     "Profile": Profile,
     "Search": Search,
+    "Categories": Categories,
 }
 
 export const pagesConfig = {
