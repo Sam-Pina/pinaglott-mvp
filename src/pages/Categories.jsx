@@ -179,25 +179,29 @@ export default function Categories() {
         const savedCard = await Word.create(dataToSave);
         
         setFlashcards(prev => prev.map((card, index) => 
-          index === currentStudyIndex ? { ...updatedCard, isSaved: true } : card
+          index === currentStudyIndex ? { ...updatedCard, isSaved: true, dbId: savedCard.id } : card
         ));
         
-        setStudySessionData(prev => ({
-          ...prev,
-          studiedWords: prev.studiedWords.some(w => w.id === id)
-            ? prev.studiedWords.map(w => w.id === id ? { ...savedCard } : w)
-            : [...prev.studiedWords, savedCard],
-        }));
+        setStudySessionData(prev => {
+          const alreadyStudied = prev.studiedWords.find(w => 
+            w.input_word === savedCard.input_word && 
+            w.output_translation === savedCard.output_translation &&
+            w.input_language === savedCard.input_language &&
+            w.output_language === savedCard.output_language
+          );
+          
+          if (alreadyStudied) {
+            return prev;
+          }
+          
+          return {
+            ...prev,
+            studiedWords: [...prev.studiedWords, savedCard]
+          };
+        });
       } catch (error) {
         console.error("Erro ao salvar flashcard:", error);
       }
-    } else if (currentCard) {
-      setStudySessionData(prev => ({
-        ...prev,
-        studiedWords: prev.studiedWords.some(w => w.id === currentCard.id) 
-          ? prev.studiedWords 
-          : [...prev.studiedWords, currentCard]
-      }));
     }
 
     if (currentStudyIndex < flashcards.length - 1) {
@@ -727,12 +731,11 @@ export default function Categories() {
         <StudySessionModal
           isOpen={studySessionData.showModal}
           onClose={() => {
-            setStudySessionData(prev => ({ ...prev, showModal: false }));
-            handleBackToCategories();
+            setStudySessionData({ studiedWords: [], showModal: false });
           }}
           studiedWords={studySessionData.studiedWords}
           onStudyAgain={() => {
-            setStudySessionData(prev => ({ ...prev, showModal: false }));
+            setStudySessionData({ studiedWords: [], showModal: false });
             handleStartStudy();
           }}
         />
