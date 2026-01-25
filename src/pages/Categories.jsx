@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LANGUAGES } from "../components/language/LanguageSelector";
-import { InvokeLLM, GenerateImage } from "@/integrations/Core";
 import FlashcardItem from "../components/flashcards/FlashcardItem";
 import { motion, AnimatePresence } from "framer-motion";
+import { STATIC_FLASHCARDS } from "../data/categoryFlashcards";
 
 const CATEGORIES = [
   {
@@ -57,15 +57,7 @@ const CATEGORIES = [
   }
 ];
 
-const CATEGORY_WORDS = {
-  sports: ["soccer", "basketball", "tennis", "swimming", "running", "volleyball", "baseball", "golf", "cycling", "boxing"],
-  house: ["kitchen", "bedroom", "bathroom", "living room", "door", "window", "table", "chair", "bed", "sofa"],
-  objects: ["book", "pen", "phone", "key", "bag", "wallet", "watch", "glasses", "umbrella", "bottle"],
-  clothes: ["shirt", "pants", "dress", "shoes", "hat", "jacket", "socks", "skirt", "sweater", "coat"],
-  food: ["apple", "banana", "bread", "cheese", "chicken", "rice", "salad", "pizza", "coffee", "water"],
-  technology: ["computer", "laptop", "smartphone", "tablet", "keyboard", "mouse", "screen", "software", "internet", "application"],
-  professions: ["doctor", "teacher", "engineer", "lawyer", "nurse", "chef", "architect", "programmer", "designer", "manager"]
-};
+
 
 export default function Categories() {
   const navigate = useNavigate();
@@ -74,8 +66,7 @@ export default function Categories() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [flashcards, setFlashcards] = useState([]);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generationProgress, setGenerationProgress] = useState({ current: 0, total: 0 });
+
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -98,87 +89,24 @@ export default function Categories() {
     setFlashcards([]);
   };
 
-  const handleLanguageSelect = async (languageCode) => {
+  const handleLanguageSelect = (languageCode) => {
     setSelectedLanguage(languageCode);
-    setIsGenerating(true);
-    setFlashcards([]);
-
-    const words = CATEGORY_WORDS[selectedCategory.id];
-    setGenerationProgress({ current: 0, total: words.length });
-
-    const generatedFlashcards = [];
-
-    for (let i = 0; i < words.length; i++) {
-      const word = words[i];
-      setGenerationProgress({ current: i + 1, total: words.length });
-
-      try {
-        const inputLang = 'en';
-        const outputLang = languageCode;
-
-        const translationResponse = await InvokeLLM({
-          prompt: `Given the word "${word}" in English, provide:
-1. The word itself in English (input_word)
-2. Translation to ${LANGUAGES[outputLang].name} (output_translation)
-3. Definition of the word in English (definition)
-4. Translation of the definition to ${LANGUAGES[outputLang].name} (definition_translation)
-5. An example sentence using the word in English (example)
-6. Translation of the example sentence to ${LANGUAGES[outputLang].name} (example_translation)
-
-Return ONLY a valid JSON with these exact fields:`,
-          response_json_schema: {
-            type: "object",
-            properties: {
-              input_word: { type: "string" },
-              output_translation: { type: "string" },
-              definition: { type: "string" },
-              definition_translation: { type: "string" },
-              example: { type: "string" },
-              example_translation: { type: "string" }
-            },
-            required: ["input_word", "output_translation"]
-          }
-        });
-
-        const imageResponse = await GenerateImage({
-          prompt: `A high-quality stylized illustration representing the concept of "${word}".
-Clean, refined lineart with smooth, well-defined strokes and balanced proportions.
-Modern digital illustration style with elegant shapes, subtle depth, and minimal yet expressive details.
-Professional, minimalist, and visually polished aesthetic suitable for educational and language-learning applications.
-Single clear subject, centered composition, no text or typography.
-Soft lighting, controlled shading, flat colors with slight gradients.
-Neutral solid-color background.
-Consistent, premium illustration style.`
-        });
-
-        const flashcard = {
-          id: `temp-${Date.now()}-${i}`,
-          input_word: translationResponse.input_word,
-          output_translation: translationResponse.output_translation,
-          input_language: inputLang,
-          output_language: outputLang,
-          definition: translationResponse.definition || "",
-          definition_translation: translationResponse.definition_translation || "",
-          example: translationResponse.example || "",
-          example_translation: translationResponse.example_translation || "",
-          image_url: imageResponse.url,
-          category: selectedCategory.id,
-          mastery_level: 0,
-          times_reviewed: 0,
-          times_reviewed_today: 0,
-          favorite: false,
-          english: translationResponse.input_word,
-          portuguese: translationResponse.output_translation
-        };
-
-        generatedFlashcards.push(flashcard);
-        setFlashcards([...generatedFlashcards]);
-      } catch (error) {
-        console.error(`Erro ao gerar flashcard para "${word}":`, error);
-      }
-    }
-
-    setIsGenerating(false);
+    
+    // Buscar flashcards estáticos da categoria e idioma selecionados
+    const categoryFlashcards = STATIC_FLASHCARDS[selectedCategory.id]?.[languageCode] || [];
+    
+    // Adicionar IDs temporários e campos necessários
+    const flashcardsWithIds = categoryFlashcards.map((card, index) => ({
+      ...card,
+      id: `static-${selectedCategory.id}-${languageCode}-${index}`,
+      mastery_level: 0,
+      times_reviewed: 0,
+      times_reviewed_today: 0,
+      favorite: false,
+      category: selectedCategory.id
+    }));
+    
+    setFlashcards(flashcardsWithIds);
   };
 
   const handleBackToCategories = () => {
@@ -253,7 +181,7 @@ Consistent, premium illustration style.`
                   </CardHeader>
                   <CardContent>
                     <Badge variant="outline" className="text-sm">
-                      {CATEGORY_WORDS[category.id].length} palavras
+                      10 palavras
                     </Badge>
                   </CardContent>
                 </Card>
@@ -288,7 +216,7 @@ Consistent, premium illustration style.`
               Selecione o idioma para o qual deseja traduzir as palavras desta categoria.
             </p>
             <Badge variant="outline" className="text-sm">
-              {CATEGORY_WORDS[selectedCategory.id].length} palavras disponíveis
+              10 palavras disponíveis
             </Badge>
           </div>
 
@@ -348,36 +276,12 @@ Consistent, premium illustration style.`
           </div>
         </div>
 
-        {isGenerating && (
-          <Card className="mb-6">
-            <CardContent className="py-8">
-              <div className="text-center">
-                <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  Gerando Flashcards...
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Criando {generationProgress.current} de {generationProgress.total} flashcards
-                </p>
-                <div className="w-full bg-gray-200 rounded-full h-2.5 max-w-md mx-auto">
-                  <div
-                    className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
-                    style={{
-                      width: `${(generationProgress.current / generationProgress.total) * 100}%`
-                    }}
-                  ></div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {flashcards.length > 0 && (
+        {flashcards.length > 0 ? (
           <>
             <div className="mb-6 text-center">
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">Flashcards Gerados</h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-2">Flashcards da Categoria</h3>
               <p className="text-gray-600">
-                {flashcards.length} de {CATEGORY_WORDS[selectedCategory.id].length} flashcards
+                {flashcards.length} flashcards disponíveis
               </p>
             </div>
 
@@ -422,6 +326,14 @@ Consistent, premium illustration style.`
               </AnimatePresence>
             </div>
           </>
+        ) : (
+          <Card>
+            <CardContent className="py-12 text-center">
+              <p className="text-gray-600">
+                Nenhum flashcard disponível para esta combinação de categoria e idioma.
+              </p>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>
