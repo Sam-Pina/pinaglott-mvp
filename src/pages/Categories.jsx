@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { LANGUAGES } from "../components/language/LanguageSelector";
 import FlashcardItem from "../components/flashcards/FlashcardItem";
 import { motion, AnimatePresence } from "framer-motion";
-import { STATIC_FLASHCARDS } from "../data/categoryFlashcards";
+import { STATIC_FLASHCARDS } from "../components/data/categoryFlashcards";
 
 const CATEGORIES = [
   {
