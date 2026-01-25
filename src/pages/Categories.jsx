@@ -362,7 +362,7 @@ export default function Categories() {
                 value={inputLanguage}
                 onValueChange={(value) => {
                   setInputLanguage(value);
-                  if (selectedCategory && selectedLanguage) {
+                  if (selectedCategory) {
                     loadFlashcards(selectedCategory.id, value, outputLanguage);
                   }
                 }}
