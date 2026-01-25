@@ -3,7 +3,7 @@ import { Word } from "@/entities/Word";
 import { User } from "@/entities/User";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Layers, Loader2, ArrowLeft, BookOpen, ChevronRight, GraduationCap, ArrowRight, Volume2, Volume1 } from "lucide-react";
+import { Layers, Loader2, ArrowLeft, BookOpen, ChevronRight, GraduationCap, ArrowRight, Volume2, Volume1, CheckSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import FlashcardItem from "../components/flashcards/FlashcardItem";
 import { motion, AnimatePresence } from "framer-motion";
 import { STATIC_FLASHCARDS } from "../components/categoryFlashcards";
+import StudySessionModal from '../components/flashcards/StudySessionModal';
 
 const CATEGORIES = [
   {
@@ -83,6 +84,10 @@ export default function Categories() {
   const [studyMode, setStudyMode] = useState(false);
   const [currentStudyIndex, setCurrentStudyIndex] = useState(0);
   const [flippedInStudy, setFlippedInStudy] = useState(false);
+  const [studySessionData, setStudySessionData] = useState({
+    studiedWords: [],
+    showModal: false
+  });
 
 
   useEffect(() => {
@@ -136,15 +141,54 @@ export default function Categories() {
     setStudyMode(true);
     setCurrentStudyIndex(0);
     setFlippedInStudy(false);
+    setStudySessionData({
+      studiedWords: [],
+      showModal: false
+    });
   };
 
   const handleExitStudy = () => {
     setStudyMode(false);
-    setCurrentStudyIndex(0);
-    setFlippedInStudy(false);
+    
+    if (studySessionData.studiedWords.length > 0) {
+      setStudySessionData(prev => ({ ...prev, showModal: true }));
+    }
   };
 
-  const handleNextCard = () => {
+  const handleNextCard = async (markAsKnown) => {
+    const currentCard = flashcards[currentStudyIndex];
+    if (!currentCard) {
+      handleExitStudy();
+      return;
+    }
+
+    if (markAsKnown) {
+      try {
+        const { id, isSaved, ...dataToSave } = currentCard;
+        const savedCard = await Word.create(dataToSave);
+        
+        setFlashcards(prev => prev.map((card, index) => 
+          index === currentStudyIndex ? { ...card, isSaved: true } : card
+        ));
+        
+        setStudySessionData(prev => ({
+          ...prev,
+          studiedWords: prev.studiedWords.some(w => w.id === id)
+            ? prev.studiedWords.map(w => w.id === id ? { ...savedCard } : w)
+            : [...prev.studiedWords, savedCard],
+        }));
+      } catch (error) {
+        console.error("Erro ao salvar flashcard:", error);
+      }
+    } else if (currentCard) {
+      setStudySessionData(prev => ({
+        ...prev,
+        studiedWords: prev.studiedWords.some(w => w.id === currentCard.id) 
+          ? prev.studiedWords 
+          : [...prev.studiedWords, currentCard]
+      }));
+    }
+
     if (currentStudyIndex < flashcards.length - 1) {
       setCurrentStudyIndex(prev => prev + 1);
       setFlippedInStudy(false);
@@ -465,7 +509,7 @@ export default function Categories() {
                 {flippedInStudy && (
                   <Button
                     variant="outline"
-                    onClick={handleNextCard} 
+                    onClick={() => handleNextCard(false)} 
                     className="border-orange-200 text-orange-600 hover:bg-orange-50 flex-1 sm:flex-none h-11 px-3 sm:px-5 text-base"
                   >
                     Revisar Depois
@@ -473,15 +517,24 @@ export default function Categories() {
                 )}
                 
                 <Button
-                  onClick={() => flippedInStudy ? handleNextCard() : setFlippedInStudy(true)}
-                  className="h-11 px-5 text-base flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700"
+                  onClick={() => flippedInStudy ? handleNextCard(true) : setFlippedInStudy(true)}
+                  className={`h-11 px-5 text-base flex-1 sm:flex-none ${
+                    !flippedInStudy ? "bg-blue-600 hover:bg-blue-700" : "bg-green-600 hover:bg-green-700"
+                  }`}
                 >
-                  {!flippedInStudy ? "Ver Tradução" : (currentStudyIndex === flashcards.length - 1 ? "Finalizar" : "Próximo")}
+                  {!flippedInStudy ? (
+                    "Ver Tradução"
+                  ) : (
+                    <>
+                      <CheckSquare className="w-4 h-4 mr-2" />
+                      Sei isso
+                    </>
+                  )}
                 </Button>
               </div>
               
               <Button
-                onClick={handleNextCard}
+                onClick={() => handleNextCard(false)}
                 variant="outline"
                 className="border-gray-200 w-full sm:w-auto h-11 px-5 text-base"
               >
@@ -658,6 +711,20 @@ export default function Categories() {
             </CardContent>
           </Card>
         )}
+        
+        {/* Modal de Sessão Concluída */}
+        <StudySessionModal
+          isOpen={studySessionData.showModal}
+          onClose={() => {
+            setStudySessionData(prev => ({ ...prev, showModal: false }));
+            handleBackToCategories();
+          }}
+          studiedWords={studySessionData.studiedWords}
+          onStudyAgain={() => {
+            setStudySessionData(prev => ({ ...prev, showModal: false }));
+            handleStartStudy();
+          }}
+        />
       </div>
     </div>
   );
