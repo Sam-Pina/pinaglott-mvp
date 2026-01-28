@@ -170,7 +170,9 @@ export default function FlashcardItem({ word, onDelete, onToggleFavorite, onEdit
           <div className="flex justify-between items-start mb-3">
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-xl font-bold text-gray-800">{word.input_word || word.english}</h3>
+                <h3 className="text-xl font-bold text-gray-800">
+                  {word.input_word || word.english}
+                </h3>
                 <Popover>
                   <PopoverTrigger asChild>
                     <button className="p-1 hover:bg-gray-100 rounded-full">
@@ -208,7 +210,11 @@ export default function FlashcardItem({ word, onDelete, onToggleFavorite, onEdit
                       </div>
                       <Button
                         size="sm"
-                        onClick={() => playAudio(word.input_word || word.english, word.input_language || 'en-US', audioRate)}
+                        onClick={() => {
+                          const langCode = word.input_language || 'en';
+                          const langMap = { 'pt': 'pt-BR', 'en': 'en-US', 'es': 'es-ES', 'fr': 'fr-FR' };
+                          playAudio(word.input_word || word.english, langMap[langCode] || 'en-US', audioRate);
+                        }}
                         className="w-full mt-2"
                       >
                         Ouvir
