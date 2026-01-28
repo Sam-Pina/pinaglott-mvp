@@ -127,18 +127,6 @@ export default function Layout({ children, currentPageName }) {
                 <span>Pesquisar</span>
               </Link>
 
-              <Link 
-                to={createPageUrl("Categories")} 
-                className={`px-4 py-2 rounded-md flex items-center space-x-1 ${
-                  isActive(createPageUrl("Categories")) 
-                    ? "bg-blue-50 text-blue-600 font-medium" 
-                    : "text-gray-600 hover:bg-gray-50"
-                }`}
-              >
-                <Layers size={18} />
-                <span>Categorias</span>
-              </Link>
-              
               {isLoggedIn && (
                 <>
                   <Link 
@@ -152,7 +140,19 @@ export default function Layout({ children, currentPageName }) {
                     <Book size={18} />
                     <span>Meus Flashcards</span>
                   </Link>
-                  
+
+                  <Link 
+                    to={createPageUrl("Categories")} 
+                    className={`px-4 py-2 rounded-md flex items-center space-x-1 ${
+                      isActive(createPageUrl("Categories")) 
+                        ? "bg-blue-50 text-blue-600 font-medium" 
+                        : "text-gray-600 hover:bg-gray-50"
+                    }`}
+                  >
+                    <Layers size={18} />
+                    <span>Categorias</span>
+                  </Link>
+
                   <Link 
                     to={createPageUrl("Profile")} 
                     className={`px-4 py-2 rounded-md flex items-center space-x-1 ${
@@ -246,19 +246,6 @@ export default function Layout({ children, currentPageName }) {
                 <span>Pesquisar</span>
               </Link>
 
-              <Link 
-                to={createPageUrl("Categories")} 
-                className={`px-4 py-3 rounded-md flex items-center space-x-2 ${
-                  isActive(createPageUrl("Categories")) 
-                    ? "bg-blue-50 text-blue-600 font-medium" 
-                    : "text-gray-600"
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Layers size={20} />
-                <span>Categorias</span>
-              </Link>
-              
               {isLoggedIn && (
                 <>
                   <Link 
@@ -273,7 +260,20 @@ export default function Layout({ children, currentPageName }) {
                     <Book size={20} />
                     <span>Meus Flashcards</span>
                   </Link>
-                  
+
+                  <Link 
+                    to={createPageUrl("Categories")} 
+                    className={`px-4 py-3 rounded-md flex items-center space-x-2 ${
+                      isActive(createPageUrl("Categories")) 
+                        ? "bg-blue-50 text-blue-600 font-medium" 
+                        : "text-gray-600"
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Layers size={20} />
+                    <span>Categorias</span>
+                  </Link>
+
                   <Link 
                     to={createPageUrl("Profile")} 
                     className={`px-4 py-3 rounded-md flex items-center space-x-2 ${
