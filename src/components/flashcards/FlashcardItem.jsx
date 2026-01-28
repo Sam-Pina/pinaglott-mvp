@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
@@ -57,12 +56,20 @@ export default function FlashcardItem({ word, onDelete, onToggleFavorite, onEdit
     const newMasteryLevel = Math.min(5, (word.mastery_level || 0) + 1);
     
     try {
-      await Word.update(word.id, { 
-        mastery_level: newMasteryLevel,
-        times_reviewed: (word.times_reviewed || 0) + 1,
-        times_reviewed_today: (word.times_reviewed_today || 0) + 1
-      });
-      if (onEditMastery) onEditMastery(word.id, newMasteryLevel);
+      // Se o flashcard ainda não foi salvo (ID temporário), usar o callback
+      if (typeof word.id === 'string' && word.id.startsWith('static-')) {
+        if (onEditMastery) {
+          await onEditMastery(word.id, newMasteryLevel);
+        }
+      } else {
+        // Flashcard já salvo, atualizar diretamente
+        await Word.update(word.id, { 
+          mastery_level: newMasteryLevel,
+          times_reviewed: (word.times_reviewed || 0) + 1,
+          times_reviewed_today: (word.times_reviewed_today || 0) + 1
+        });
+        if (onEditMastery) onEditMastery(word.id, newMasteryLevel);
+      }
     } catch (error) {
       console.error("Erro ao atualizar nível de domínio:", error);
     } finally {
