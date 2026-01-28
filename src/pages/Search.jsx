@@ -96,16 +96,19 @@ export default function Search() {
         }
       });
 
-      // 2. Gerar imagem ilustrativa
+      // 2. Gerar imagem ilustrativa (agora fotográfica e realista)
       const imageResponse = await GenerateImage({
-        prompt: `A high-quality stylized illustration representing the concept of "${translationResponse.input_word}".
-Clean, refined lineart with smooth, well-defined strokes and balanced proportions.
-Modern digital illustration style with elegant shapes, subtle depth, and minimal yet expressive details.
-Professional, minimalist, and visually polished aesthetic suitable for educational and language-learning applications.
-Single clear subject, centered composition, no text or typography.
-Soft lighting, controlled shading, flat colors with slight gradients.
-Neutral solid-color background.
-Consistent, premium illustration style.`
+        prompt: `Professional high-quality photograph of "${translationResponse.input_word}".
+Ultra-realistic photographic style with sharp focus and crisp detail.
+Natural studio lighting or soft outdoor lighting with realistic shadows and highlights.
+Single clear subject, centered composition on a clean neutral background.
+Real-world object or scene, not illustration or digital art.
+Professional product photography quality with proper exposure and color accuracy.
+Clean, uncluttered, and visually appealing suitable for educational flashcards.
+No text, no watermarks, no logos, no graphics overlay.
+
+Negative prompt:
+illustration, cartoon, drawing, sketch, painting, digital art, 3D render, clipart, icon, anime, stylized art, flat design, vector graphics, abstract art, artwork, computer graphics`
       });
 
       // 3. Combinar todos os resultados
