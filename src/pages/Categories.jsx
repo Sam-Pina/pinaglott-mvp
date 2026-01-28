@@ -273,36 +273,22 @@ export default function Categories() {
   };
 
   const handleUpdateMastery = async (flashcard) => {
-    // Se ainda não foi salvo, salvar primeiro
-    if (!flashcard.isSaved || typeof flashcard.id === 'string') {
-      const newMasteryLevel = Math.min(5, (flashcard.mastery_level || 0) + 1);
-      
-      const updatedCard = {
-        ...flashcard,
+    const newMasteryLevel = Math.min(5, (flashcard.mastery_level || 0) + 1);
+    
+    // Atualizar apenas localmente, sem salvar no banco
+    setFlashcards(prev => 
+      prev.map(f => f.id === flashcard.id ? { 
+        ...f, 
         mastery_level: newMasteryLevel,
-        times_reviewed: (flashcard.times_reviewed || 0) + 1,
-        times_reviewed_today: (flashcard.times_reviewed_today || 0) + 1,
-        times_reviewed_this_week: (flashcard.times_reviewed_this_week || 0) + 1,
+        times_reviewed: (f.times_reviewed || 0) + 1,
+        times_reviewed_today: (f.times_reviewed_today || 0) + 1,
+        times_reviewed_this_week: (f.times_reviewed_this_week || 0) + 1,
         last_review_date: new Date().toISOString()
-      };
-      
-      try {
-        const { id, isSaved, ...dataToSave } = updatedCard;
-        const savedCard = await Word.create(dataToSave);
-        
-        setFlashcards(prev => 
-          prev.map(f => f.id === flashcard.id ? { ...savedCard, isSaved: true, category: flashcard.category } : f)
-        );
-        
-        return savedCard;
-      } catch (error) {
-        console.error("Erro ao salvar flashcard:", error);
-        throw error;
-      }
-    } else {
-      // Se já está salvo, atualizar
-      const newMasteryLevel = Math.min(5, (flashcard.mastery_level || 0) + 1);
-      
+      } : f)
+    );
+    
+    // Se o flashcard já estava salvo no banco, atualizar também lá
+    if (flashcard.isSaved && typeof flashcard.id !== 'string') {
       try {
         await Word.update(flashcard.id, { 
           mastery_level: newMasteryLevel,
@@ -311,22 +297,8 @@ export default function Categories() {
           times_reviewed_this_week: (flashcard.times_reviewed_this_week || 0) + 1,
           last_review_date: new Date().toISOString()
         });
-        
-        setFlashcards(prev => 
-          prev.map(f => f.id === flashcard.id ? { 
-            ...f, 
-            mastery_level: newMasteryLevel,
-            times_reviewed: (f.times_reviewed || 0) + 1,
-            times_reviewed_today: (f.times_reviewed_today || 0) + 1,
-            times_reviewed_this_week: (f.times_reviewed_this_week || 0) + 1,
-            last_review_date: new Date().toISOString()
-          } : f)
-        );
-        
-        return flashcard;
       } catch (error) {
-        console.error("Erro ao atualizar flashcard:", error);
-        throw error;
+        console.error("Erro ao atualizar flashcard salvo:", error);
       }
     }
   };
