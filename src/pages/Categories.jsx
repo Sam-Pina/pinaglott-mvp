@@ -118,6 +118,9 @@ export default function Categories() {
     try {
       const savedCards = await Word.list();
       
+      // Buscar revisões locais do localStorage
+      const localReviews = getLocalReviews(categoryId);
+      
       // Mapear flashcards estáticos com dados salvos (se existir)
       const flashcardsWithIds = categoryFlashcards.map((card, index) => {
         // Procurar se esse flashcard já foi salvo
@@ -128,22 +131,27 @@ export default function Categories() {
           sc.output_language === card.output_language
         );
         
+        const cardKey = `${card.input_word}-${card.output_translation}`;
+        const localReview = localReviews[cardKey] || { times_reviewed_today: 0, mastery_level: 0 };
+        
         if (savedCard) {
-          // Se foi salvo, usar os dados do banco (com ID real)
+          // Se foi salvo, usar os dados do banco (com ID real) + revisões locais
           return {
             ...savedCard,
+            times_reviewed_today: localReview.times_reviewed_today,
+            mastery_level: localReview.mastery_level,
             isSaved: true,
             category: categoryId
           };
         }
         
-        // Se não foi salvo, usar dados estáticos
+        // Se não foi salvo, usar dados estáticos + revisões locais
         return {
           ...card,
           id: `static-${categoryId}-${outLang}-${index}`,
-          mastery_level: 0,
+          mastery_level: localReview.mastery_level,
           times_reviewed: 0,
-          times_reviewed_today: 0,
+          times_reviewed_today: localReview.times_reviewed_today,
           favorite: false,
           category: categoryId,
           isSaved: false
@@ -154,17 +162,68 @@ export default function Categories() {
     } catch (error) {
       console.error("Erro ao carregar flashcards:", error);
       // Fallback para flashcards estáticos
-      const flashcardsWithIds = categoryFlashcards.map((card, index) => ({
-        ...card,
-        id: `static-${categoryId}-${outLang}-${index}`,
-        mastery_level: 0,
-        times_reviewed: 0,
-        times_reviewed_today: 0,
-        favorite: false,
-        category: categoryId,
-        isSaved: false
-      }));
+      const localReviews = getLocalReviews(categoryId);
+      
+      const flashcardsWithIds = categoryFlashcards.map((card, index) => {
+        const cardKey = `${card.input_word}-${card.output_translation}`;
+        const localReview = localReviews[cardKey] || { times_reviewed_today: 0, mastery_level: 0 };
+        
+        return {
+          ...card,
+          id: `static-${categoryId}-${outLang}-${index}`,
+          mastery_level: localReview.mastery_level,
+          times_reviewed: 0,
+          times_reviewed_today: localReview.times_reviewed_today,
+          favorite: false,
+          category: categoryId,
+          isSaved: false
+        };
+      });
       setFlashcards(flashcardsWithIds);
+    }
+  };
+
+  const getLocalReviews = (categoryId) => {
+    try {
+      const storageKey = `category_reviews_${categoryId}`;
+      const stored = localStorage.getItem(storageKey);
+      if (!stored) return {};
+      
+      const data = JSON.parse(stored);
+      const today = new Date().toDateString();
+      
+      // Se a data armazenada não é hoje, resetar
+      if (data.date !== today) {
+        localStorage.removeItem(storageKey);
+        return {};
+      }
+      
+      return data.reviews || {};
+    } catch (error) {
+      console.error("Erro ao buscar revisões locais:", error);
+      return {};
+    }
+  };
+
+  const saveLocalReview = (categoryId, cardKey, reviewData) => {
+    try {
+      const storageKey = `category_reviews_${categoryId}`;
+      const today = new Date().toDateString();
+      
+      const stored = localStorage.getItem(storageKey);
+      let data = { date: today, reviews: {} };
+      
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.date === today) {
+          data = parsed;
+        }
+      }
+      
+      data.reviews[cardKey] = reviewData;
+      localStorage.setItem(storageKey, JSON.stringify(data));
+    } catch (error) {
+      console.error("Erro ao salvar revisão local:", error);
     }
   };
 
@@ -274,6 +333,14 @@ export default function Categories() {
 
   const handleUpdateMastery = async (flashcard) => {
     const newMasteryLevel = Math.min(5, (flashcard.mastery_level || 0) + 1);
+    const newTimesReviewedToday = (flashcard.times_reviewed_today || 0) + 1;
+    
+    // Salvar revisão no localStorage
+    const cardKey = `${flashcard.input_word}-${flashcard.output_translation}`;
+    saveLocalReview(selectedCategory.id, cardKey, {
+      times_reviewed_today: newTimesReviewedToday,
+      mastery_level: newMasteryLevel
+    });
     
     // Atualizar apenas localmente, sem salvar no banco
     setFlashcards(prev => 
@@ -281,7 +348,7 @@ export default function Categories() {
         ...f, 
         mastery_level: newMasteryLevel,
         times_reviewed: (f.times_reviewed || 0) + 1,
-        times_reviewed_today: (f.times_reviewed_today || 0) + 1,
+        times_reviewed_today: newTimesReviewedToday,
         times_reviewed_this_week: (f.times_reviewed_this_week || 0) + 1,
         last_review_date: new Date().toISOString()
       } : f)
@@ -293,7 +360,7 @@ export default function Categories() {
         await Word.update(flashcard.id, { 
           mastery_level: newMasteryLevel,
           times_reviewed: (flashcard.times_reviewed || 0) + 1,
-          times_reviewed_today: (flashcard.times_reviewed_today || 0) + 1,
+          times_reviewed_today: newTimesReviewedToday,
           times_reviewed_this_week: (flashcard.times_reviewed_this_week || 0) + 1,
           last_review_date: new Date().toISOString()
         });
