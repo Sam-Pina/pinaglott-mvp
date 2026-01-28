@@ -114,6 +114,11 @@ export default function Categories() {
     // Buscar flashcards estáticos da categoria e idioma de saída selecionados
     const categoryFlashcards = STATIC_FLASHCARDS[categoryId]?.[outLang] || [];
     
+    // Filtrar apenas flashcards que correspondem ao idioma de entrada selecionado
+    const filteredByInputLang = categoryFlashcards.filter(card => 
+      card.input_language === inLang
+    );
+    
     // Buscar flashcards salvos do banco de dados
     try {
       const savedCards = await Word.list();
@@ -122,7 +127,7 @@ export default function Categories() {
       const localReviews = getLocalReviews(categoryId);
       
       // Mapear flashcards estáticos com dados salvos (se existir)
-      const flashcardsWithIds = categoryFlashcards.map((card, index) => {
+      const flashcardsWithIds = filteredByInputLang.map((card, index) => {
         // Procurar se esse flashcard já foi salvo
         const savedCard = savedCards.find(sc => 
           sc.input_word === card.input_word && 
@@ -148,7 +153,7 @@ export default function Categories() {
         // Se não foi salvo, usar dados estáticos + revisões locais
         return {
           ...card,
-          id: `static-${categoryId}-${outLang}-${index}`,
+          id: `static-${categoryId}-${inLang}-${outLang}-${index}`,
           mastery_level: localReview.mastery_level,
           times_reviewed: 0,
           times_reviewed_today: localReview.times_reviewed_today,
@@ -164,13 +169,13 @@ export default function Categories() {
       // Fallback para flashcards estáticos
       const localReviews = getLocalReviews(categoryId);
       
-      const flashcardsWithIds = categoryFlashcards.map((card, index) => {
+      const flashcardsWithIds = filteredByInputLang.map((card, index) => {
         const cardKey = `${card.input_word}-${card.output_translation}`;
         const localReview = localReviews[cardKey] || { times_reviewed_today: 0, mastery_level: 0 };
         
         return {
           ...card,
-          id: `static-${categoryId}-${outLang}-${index}`,
+          id: `static-${categoryId}-${inLang}-${outLang}-${index}`,
           mastery_level: localReview.mastery_level,
           times_reviewed: 0,
           times_reviewed_today: localReview.times_reviewed_today,
