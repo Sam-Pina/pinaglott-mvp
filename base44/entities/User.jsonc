@@ -1,0 +1,64 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "level": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ],
+      "default": "beginner",
+      "description": "N\u00edvel de conhecimento do usu\u00e1rio"
+    },
+    "words_learned": {
+      "type": "integer",
+      "default": 0,
+      "description": "N\u00famero total de palavras aprendidas (mastery_level 5)"
+    },
+    "study_streak": {
+      "type": "integer",
+      "default": 0,
+      "description": "Dias consecutivos de estudo"
+    },
+    "last_study_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Data do \u00faltimo estudo (YYYY-MM-DD)"
+    },
+    "preferred_categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Categorias preferidas para estudo"
+    },
+    "daily_goal": {
+      "type": "integer",
+      "default": 10,
+      "description": "Meta di\u00e1ria de palavras a serem adicionadas"
+    },
+    "weekly_goal": {
+      "type": "integer",
+      "default": 50,
+      "description": "Meta semanal de palavras a serem revisadas"
+    },
+    "words_added_today": {
+      "type": "integer",
+      "default": 0,
+      "description": "N\u00famero de palavras adicionadas hoje"
+    },
+    "last_addition_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Data da \u00faltima adi\u00e7\u00e3o de palavra (YYYY-MM-DD)"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "URL da imagem de perfil do usu\u00e1rio"
+    }
+  },
+  "required": []
+}

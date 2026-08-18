@@ -1,0 +1,129 @@
+{
+  "name": "Word",
+  "type": "object",
+  "properties": {
+    "input_word": {
+      "type": "string",
+      "description": "Palavra no idioma de entrada"
+    },
+    "output_translation": {
+      "type": "string",
+      "description": "Tradu\u00e7\u00e3o no idioma de sa\u00edda"
+    },
+    "input_language": {
+      "type": "string",
+      "enum": [
+        "pt",
+        "en",
+        "es",
+        "fr"
+      ],
+      "default": "en",
+      "description": "C\u00f3digo do idioma de entrada"
+    },
+    "output_language": {
+      "type": "string",
+      "enum": [
+        "pt",
+        "en",
+        "es",
+        "fr"
+      ],
+      "default": "pt",
+      "description": "C\u00f3digo do idioma de sa\u00edda"
+    },
+    "definition": {
+      "type": "string",
+      "description": "Defini\u00e7\u00e3o da palavra no idioma de entrada"
+    },
+    "definition_translation": {
+      "type": "string",
+      "description": "Tradu\u00e7\u00e3o da defini\u00e7\u00e3o para o idioma de sa\u00edda"
+    },
+    "example": {
+      "type": "string",
+      "description": "Frase de exemplo no idioma de entrada"
+    },
+    "example_translation": {
+      "type": "string",
+      "description": "Tradu\u00e7\u00e3o da frase de exemplo"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL da imagem relacionada"
+    },
+    "audio_url": {
+      "type": "string",
+      "description": "URL do \u00e1udio da palavra no idioma de entrada"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "basic",
+        "intermediate",
+        "advanced",
+        "business",
+        "travel",
+        "food",
+        "technology",
+        "nature",
+        "entertainment"
+      ],
+      "default": "basic",
+      "description": "Categoria da palavra"
+    },
+    "favorite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Marcada como favorita"
+    },
+    "times_reviewed": {
+      "type": "integer",
+      "default": 0,
+      "description": "N\u00famero de vezes que a palavra foi revisada"
+    },
+    "times_reviewed_today": {
+      "type": "integer",
+      "default": 0,
+      "description": "N\u00famero de vezes que a palavra foi revisada hoje"
+    },
+    "mastery_level": {
+      "type": "integer",
+      "default": 0,
+      "minimum": 0,
+      "maximum": 5,
+      "description": "N\u00edvel de dom\u00ednio da palavra, de 0 (n\u00e3o aprendida) a 5 (dominada)"
+    },
+    "english": {
+      "type": "string",
+      "description": "Palavra em ingl\u00eas (compatibilidade)"
+    },
+    "portuguese": {
+      "type": "string",
+      "description": "Tradu\u00e7\u00e3o em portugu\u00eas (compatibilidade)"
+    }
+  },
+  "required": [
+    "input_word",
+    "output_translation",
+    "input_language",
+    "output_language"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}
