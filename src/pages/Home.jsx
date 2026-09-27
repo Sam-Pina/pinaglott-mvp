@@ -4,7 +4,7 @@ import { createPageUrl } from "@/utils";
 import {
   Search, Book, ArrowRight, CheckCircle, Zap, BarChart, Eye,
   MessageSquare, PenTool, Brain, BookOpen, Layers,
-  Loader2, Gamepad2
+  Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { InvokeLLM, GenerateImage } from "@/integrations/Core";
 import TranslationResult from "../components/search/TranslationResult";
 import UserProgressDashboard from "../components/dashboard/UserProgressDashboard";
-import GamificationWidget from "../components/dashboard/GamificationWidget";
 
 export default function Home() {
   const { toast } = useToast();
@@ -189,36 +188,6 @@ export default function Home() {
             </div>
             <div className="md:w-5/12">
               <UserProgressDashboard key={Date.now()} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Gamification Section */}
-      <section className="pb-10 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-3 gap-6 items-stretch">
-            <div className="md:col-span-1">
-              <GamificationWidget />
-            </div>
-            <div className="md:col-span-2 flex flex-col justify-center bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">Continue aprendendo</h2>
-              <p className="text-gray-600 mb-6">
-                Ganhe XP estudando flashcards, completando categorias e praticando com jogos.
-                Suba de nível e mantenha sua sequência diária.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Link to={createPageUrl("Categories")}>
-                  <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white">
-                    <Layers className="w-5 h-5 mr-2" /> Estudar categorias
-                  </Button>
-                </Link>
-                <Link to="/Jogos">
-                  <Button variant="outline" className="w-full sm:w-auto border-blue-200 text-blue-600 hover:bg-blue-50">
-                    <Gamepad2 className="w-5 h-5 mr-2" /> Pratique com jogos
-                  </Button>
-                </Link>
-              </div>
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { User } from "@/entities/User";
-import { Search, Book, Home, User as UserIcon, LogIn, Menu, X, Shield, Layers, Gamepad2 } from "lucide-react";
+import { Search, Book, Home, User as UserIcon, LogIn, Menu, X, Shield, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Layout({ children, currentPageName }) {
@@ -154,18 +154,6 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
 
                   <Link 
-                    to={createPageUrl("Jogos")} 
-                    className={`px-4 py-2 rounded-md flex items-center space-x-1 ${
-                      isActive(createPageUrl("Jogos")) 
-                        ? "bg-blue-50 text-blue-600 font-medium" 
-                        : "text-gray-600 hover:bg-gray-50"
-                    }`}
-                  >
-                    <Gamepad2 size={18} />
-                    <span>Jogos</span>
-                  </Link>
-
-                  <Link 
                     to={createPageUrl("Profile")} 
                     className={`px-4 py-2 rounded-md flex items-center space-x-1 ${
                       isActive(createPageUrl("Profile")) 
@@ -284,19 +272,6 @@ export default function Layout({ children, currentPageName }) {
                   >
                     <Layers size={20} />
                     <span>Categorias</span>
-                  </Link>
-
-                  <Link 
-                    to={createPageUrl("Jogos")} 
-                    className={`px-4 py-3 rounded-md flex items-center space-x-2 ${
-                      isActive(createPageUrl("Jogos")) 
-                        ? "bg-blue-50 text-blue-600 font-medium" 
-                        : "text-gray-600"
-                    }`}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <Gamepad2 size={20} />
-                    <span>Jogos</span>
                   </Link>
 
                   <Link 
