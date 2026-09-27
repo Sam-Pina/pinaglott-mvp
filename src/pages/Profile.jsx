@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { User } from "@/entities/User";
 import { Word } from "@/entities/Word";
@@ -31,6 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format, differenceInDays, parseISO, subDays, addMonths, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import AchievementPopup from '../components/achievements/AchievementPopup';
+import MyProgressPanel from '../components/dashboard/MyProgressPanel';
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -738,6 +738,7 @@ export default function Profile() {
                       <TabsTrigger value="progress" className="px-3 sm:px-4 py-2 text-xs sm:text-sm data-[state=active]:shadow-md">Progresso</TabsTrigger>
                       <TabsTrigger value="history" className="px-3 sm:px-4 py-2 text-xs sm:text-sm data-[state=active]:shadow-md">Histórico</TabsTrigger>
                       <TabsTrigger value="achievements" className="px-3 sm:px-4 py-2 text-xs sm:text-sm data-[state=active]:shadow-md">Conquistas</TabsTrigger>
+                      <TabsTrigger value="gamification" className="px-3 sm:px-4 py-2 text-xs sm:text-sm data-[state=active]:shadow-md">Meu progresso</TabsTrigger>
                     </TabsList>
                   </div>
                 </div>
@@ -1008,6 +1009,13 @@ export default function Profile() {
                       );
                     })}
                   </div>
+                </TabsContent>
+
+                <TabsContent value="gamification" className="mt-0">
+                  <div className="hidden lg:block mb-6">
+                    <h2 className="text-2xl font-bold text-gray-800">Meu progresso</h2>
+                  </div>
+                  <MyProgressPanel />
                 </TabsContent>
               </CardContent>
             </Tabs>

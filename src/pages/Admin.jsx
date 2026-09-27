@@ -54,6 +54,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import CategoryManager from '@/components/admin/CategoryManager';
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -351,6 +352,18 @@ export default function Admin() {
               </Table>
             </div>
             {filteredUsers.length === 0 && <div className="text-center py-8"><p className="text-gray-500">Nenhum usuário encontrado.</p></div>}
+          </CardContent>
+        </Card>
+
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>Categorias e Flashcards</CardTitle>
+            <CardDescription>
+              Gerencie as categorias de estudo e as palavras pré-cadastradas.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <CategoryManager />
           </CardContent>
         </Card>
       </div>

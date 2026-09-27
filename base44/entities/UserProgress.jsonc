@@ -1,0 +1,83 @@
+{
+  "name": "UserProgress",
+  "type": "object",
+  "properties": {
+    "xp": {
+      "type": "integer",
+      "default": 0,
+      "description": "Pontos de experi\u00eancia acumulados"
+    },
+    "level": {
+      "type": "integer",
+      "default": 1,
+      "description": "N\u00edvel atual do usu\u00e1rio"
+    },
+    "streak": {
+      "type": "integer",
+      "default": 0,
+      "description": "Sequ\u00eancia de dias estudados"
+    },
+    "longest_streak": {
+      "type": "integer",
+      "default": 0,
+      "description": "Maior sequ\u00eancia alcan\u00e7ada"
+    },
+    "last_activity_date": {
+      "type": "string",
+      "description": "Data (YYYY-MM-DD) da \u00faltima atividade"
+    },
+    "categories_completed": {
+      "type": "integer",
+      "default": 0,
+      "description": "Quantidade de categorias conclu\u00eddas"
+    },
+    "flashcards_studied": {
+      "type": "integer",
+      "default": 0,
+      "description": "Total de flashcards estudados"
+    },
+    "games_played": {
+      "type": "integer",
+      "default": 0,
+      "description": "Total de jogos conclu\u00eddos"
+    },
+    "correct_answers": {
+      "type": "integer",
+      "default": 0,
+      "description": "Total de respostas corretas"
+    },
+    "total_answers": {
+      "type": "integer",
+      "default": 0,
+      "description": "Total de respostas"
+    },
+    "achievements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Conquistas desbloqueadas"
+    },
+    "completed_categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Slugs de categorias conclu\u00eddas"
+    }
+  },
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}
