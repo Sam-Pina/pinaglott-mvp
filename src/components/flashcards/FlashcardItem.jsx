@@ -2,14 +2,10 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Star, Pencil, Trash2, RotateCw, Volume2 } from 'lucide-react';
+import { Star, Pencil, Trash2, RotateCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Word } from '@/entities/Word';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import AudioButton from '@/components/common/AudioButton';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,7 +21,6 @@ import {
 export default function FlashcardItem({ word, onDelete, onToggleFavorite, onEditMastery, onEdit }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [audioRate, setAudioRate] = useState(1);
 
   const categoryColors = {
     basic: "bg-blue-100 text-blue-800",
@@ -88,64 +83,6 @@ export default function FlashcardItem({ word, onDelete, onToggleFavorite, onEdit
     }
   };
 
-  const playAudio = (text, lang = 'en-US', rate = 1.0) => {
-    if (!text || typeof window === 'undefined' || !window.speechSynthesis) {
-      console.error("Speech Synthesis not supported.");
-      return;
-    }
-    
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = rate;
-    utterance.lang = lang;
-
-    const setVoiceAndSpeak = () => {
-        const voices = window.speechSynthesis.getVoices();
-        
-        // Mapear idiomas para vozes preferenciais
-        const preferredVoices = {
-          'pt-BR': ['Google português do Brasil', 'Microsoft Maria - Portuguese (Brazil)', 'Luciana'],
-          'en-US': ['Google US English', 'Microsoft David - English (United States)', 'Samantha', 'Alex'],
-          'es-ES': ['Google español', 'Microsoft Helena - Spanish (Spain)', 'Monica'],
-          'fr-FR': ['Google français', 'Microsoft Hortense - French (France)', 'Amelie']
-        };
-        
-        let selectedVoice = null;
-        
-        // Tentar encontrar uma voz preferida
-        if (preferredVoices[lang]) {
-          selectedVoice = voices.find(v => 
-            preferredVoices[lang].some(preferred => 
-              v.name.toLowerCase().includes(preferred.toLowerCase())
-            )
-          );
-        }
-        
-        // Fallback para qualquer voz do idioma
-        if (!selectedVoice) {
-          const langCode = lang.substring(0, 2);
-          selectedVoice = voices.find(v => v.lang.startsWith(langCode));
-        }
-        
-        // Fallback final para voz padrão
-        if (!selectedVoice) {
-          selectedVoice = voices.find(v => v.default);
-        }
-
-        if (selectedVoice) {
-            utterance.voice = selectedVoice;
-        }
-
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utterance);
-    };
-
-    if (window.speechSynthesis.getVoices().length > 0) {
-        setVoiceAndSpeak();
-    } else {
-        window.speechSynthesis.onvoiceschanged = setVoiceAndSpeak;
-    }
-  };
-
   const getStatusBadge = () => {
     if (word.mastery_level === 5) {
       return <Badge className="bg-green-100 text-green-800">Dominado</Badge>;
@@ -173,55 +110,12 @@ export default function FlashcardItem({ word, onDelete, onToggleFavorite, onEdit
                 <h3 className="text-xl font-bold text-gray-800">
                   {word.input_word || word.english}
                 </h3>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button className="p-1 hover:bg-gray-100 rounded-full">
-                      <Volume2 className="w-4 h-4 text-blue-600" />
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-48 p-2">
-                    <div className="flex flex-col space-y-2">
-                      <p className="text-sm font-medium">Velocidade:</p>
-                      <div className="flex justify-between">
-                        <Button 
-                          size="sm" 
-                          variant={audioRate === 0.5 ? "default" : "outline"}
-                          className="text-xs px-2"
-                          onClick={() => setAudioRate(0.5)}
-                        >
-                          0.5x
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant={audioRate === 1 ? "default" : "outline"}
-                          className="text-xs px-2"
-                          onClick={() => setAudioRate(1)}
-                        >
-                          1x
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant={audioRate === 2 ? "default" : "outline"}
-                          className="text-xs px-2"
-                          onClick={() => setAudioRate(2)}
-                        >
-                          2x
-                        </Button>
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          const langCode = word.input_language || 'en';
-                          const langMap = { 'pt': 'pt-BR', 'en': 'en-US', 'es': 'es-ES', 'fr': 'fr-FR' };
-                          playAudio(word.input_word || word.english, langMap[langCode] || 'en-US', audioRate);
-                        }}
-                        className="w-full mt-2"
-                      >
-                        Ouvir
-                      </Button>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                <AudioButton
+                  text={word.input_word || word.english}
+                  language={word.input_language || 'en'}
+                  className="text-blue-600 hover:bg-blue-50"
+                  ariaLabel="Ouvir pronúncia"
+                />
               </div>
               <p className="text-gray-600">{word.output_translation || word.portuguese}</p>
             </div>

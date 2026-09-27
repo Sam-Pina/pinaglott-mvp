@@ -1,5 +1,5 @@
 import React from 'react';
-import { Book, Save, Volume2, ExternalLink, Volume1, X, ImageOff } from 'lucide-react';
+import { Book, Save, ExternalLink, X, ImageOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,18 +8,14 @@ import { Word } from '@/entities/Word';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { LANGUAGES } from '../language/LanguageSelector';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import AudioButton from '@/components/common/AudioButton';
+import { speak } from '@/lib/speechService';
 
 export default function TranslationResult({ word, onSaveFlashcard, onClose }) {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
   const [saved, setSaved] = React.useState(false);
-  const [audioRate, setAudioRate] = React.useState(1);
   const [hasSavedCard, setHasSavedCard] = React.useState(false);
 
   React.useEffect(() => {
@@ -34,101 +30,6 @@ export default function TranslationResult({ word, onSaveFlashcard, onClose }) {
     
     checkAuth();
   }, []);
-
-  const getLanguageForSpeech = (languageCode) => {
-    const speechLanguages = {
-      'pt': 'pt-BR',
-      'en': 'en-US', 
-      'es': 'es-ES',
-      'fr': 'fr-FR'
-    };
-    return speechLanguages[languageCode] || 'en-US';
-  };
-
-  const getSpeechSettings = (languageCode) => {
-    // Valores de rate e pitch que funcionam bem no desktop e servirão de base.
-    switch (languageCode) {
-      case 'en':
-        return { pitch: 1.0, rate: 1.0 };
-      case 'pt':
-      case 'es':
-      case 'fr':
-        return { pitch: 1.05, rate: 0.95 };
-      default:
-        return { pitch: 1.0, rate: 1.0 };
-    }
-  };
-
-  const playAudio = (text, languageCode = 'en') => {
-    if (!text || typeof window === 'undefined' || !window.speechSynthesis) {
-        console.error("Speech Synthesis not supported.");
-        return;
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    const settings = getSpeechSettings(languageCode);
-
-    utterance.pitch = settings.pitch;
-    utterance.rate = settings.rate * audioRate;
-    utterance.lang = getLanguageForSpeech(languageCode);
-
-    const setVoiceAndSpeak = () => {
-        const voices = window.speechSynthesis.getVoices();
-        if (voices.length === 0) return; // Aborta se não houver vozes
-        
-        let selectedVoice = null;
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-        // Mapas de vozes preferenciais para cada plataforma e idioma
-        const preferredVoices = {
-            mobile: {
-                'pt': ['Google português do Brasil', 'com.apple.ttsbundle.siri_pt-BR_compact'],
-                'es': ['Google español', 'com.apple.ttsbundle.siri_es-ES_compact'],
-                'fr': ['Google français', 'com.apple.ttsbundle.siri_fr-FR_compact'],
-                'en': ['Google US English', 'com.apple.ttsbundle.siri_en-US_compact']
-            },
-            desktop: {
-                'pt': ['Google português do Brasil'],
-                'es': ['Google español'],
-                'fr': ['Google français'],
-                'en': ['Google US English']
-            }
-        };
-
-        const platform = isMobile ? 'mobile' : 'desktop';
-        const voicesForLang = preferredVoices[platform][languageCode] || [];
-
-        // 1. Tenta encontrar uma das vozes preferenciais
-        if (voicesForLang.length > 0) {
-            selectedVoice = voices.find(v => voicesForLang.some(preferred => v.name.includes(preferred)));
-        }
-
-        // 2. Fallback: Se não encontrou, busca a melhor voz disponível para o idioma
-        if (!selectedVoice) {
-            // Tenta voz nativa do idioma exato (ex: 'pt-BR')
-            selectedVoice = voices.find(v => v.lang === utterance.lang && v.localService);
-        }
-        if (!selectedVoice) {
-            // Tenta qualquer voz para o idioma (ex: 'pt-BR' ou 'pt-PT')
-            selectedVoice = voices.find(v => v.lang.startsWith(languageCode));
-        }
-
-        // 3. Atribui a voz encontrada
-        if (selectedVoice) {
-            utterance.voice = selectedVoice;
-        }
-        
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utterance);
-    };
-
-    if (window.speechSynthesis.getVoices().length > 0) {
-        setVoiceAndSpeak();
-    } else {
-        // Evento para garantir que as vozes sejam carregadas, especialmente no mobile
-        window.speechSynthesis.onvoiceschanged = setVoiceAndSpeak;
-    }
-  };
 
   const handleSaveFlashcard = async () => {
     if (!isLoggedIn) {
@@ -217,51 +118,13 @@ export default function TranslationResult({ word, onSaveFlashcard, onClose }) {
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{word.input_word}</h2>
                 <div className="flex items-center gap-1">
                   <span className="text-sm text-gray-500">{inputLang.flag}</span>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <button className="p-1.5 hover:bg-blue-100 rounded-full transition-colors">
-                        <Volume2 className="text-blue-600" size={18} />
-                      </button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-48 p-2">
-                      <div className="flex flex-col space-y-2">
-                        <p className="text-sm font-medium">Velocidade:</p>
-                        <div className="flex justify-between">
-                          <Button 
-                            size="sm" 
-                            variant={audioRate === 0.5 ? "default" : "outline"}
-                            className="text-xs px-2"
-                            onClick={() => setAudioRate(0.5)}
-                          >
-                            0.5x
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant={audioRate === 1 ? "default" : "outline"}
-                            className="text-xs px-2"
-                            onClick={() => setAudioRate(1)}
-                          >
-                            1x
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant={audioRate === 2 ? "default" : "outline"}
-                            className="text-xs px-2"
-                            onClick={() => setAudioRate(2)}
-                          >
-                            2x
-                          </Button>
-                        </div>
-                        <Button
-                          size="sm"
-                          onClick={() => playAudio(word.input_word, word.input_language)}
-                          className="w-full mt-2"
-                        >
-                          Ouvir
-                        </Button>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
+                  <AudioButton
+                    text={word.input_word}
+                    language={word.input_language}
+                    className="text-blue-600 hover:bg-blue-100"
+                    iconClassName="w-[18px] h-[18px]"
+                    ariaLabel="Ouvir pronúncia"
+                  />
                 </div>
                 {word.part_of_speech && (
                   <Badge variant="outline" className="text-gray-500 text-xs sm:text-sm py-0.5 px-1.5 sm:py-1 sm:px-2">
@@ -272,12 +135,13 @@ export default function TranslationResult({ word, onSaveFlashcard, onClose }) {
               <div className="flex items-center gap-2">
                 <p className="text-lg sm:text-xl text-indigo-700">{word.output_translation}</p>
                 <span className="text-sm text-gray-500">{outputLang.flag}</span>
-                <button 
-                  onClick={() => playAudio(word.output_translation, word.output_language)}
-                  className="p-1.5 hover:bg-indigo-100 rounded-full transition-colors"
-                >
-                  <Volume2 className="text-indigo-600" size={18} />
-                </button>
+                <AudioButton
+                  text={word.output_translation}
+                  language={word.output_language}
+                  className="text-indigo-600 hover:bg-indigo-100"
+                  iconClassName="w-[18px] h-[18px]"
+                  ariaLabel="Ouvir tradução"
+                />
               </div>
               <div className="mt-2 flex flex-wrap gap-2">
                 <Badge className="bg-blue-100 text-blue-700 text-xs sm:text-sm py-0.5 px-1.5 sm:py-1 sm:px-2">
@@ -317,69 +181,27 @@ export default function TranslationResult({ word, onSaveFlashcard, onClose }) {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <h3 className="font-medium text-gray-700 text-sm sm:text-base">Exemplo:</h3>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <button className="p-1.5 hover:bg-gray-100 rounded-full">
-                        <Volume1 size={16} className="text-gray-600" />
-                      </button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-48 p-2">
-                      <div className="flex flex-col space-y-2">
-                        <p className="text-sm font-medium">Velocidade:</p>
-                        <div className="flex justify-between">
-                          <Button 
-                            size="sm" 
-                            variant={audioRate === 0.5 ? "default" : "outline"}
-                            className="text-xs px-2"
-                            onClick={() => setAudioRate(0.5)}
-                          >
-                            0.5x
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant={audioRate === 1 ? "default" : "outline"}
-                            className="text-xs px-2"
-                            onClick={() => setAudioRate(1)}
-                          >
-                            1x
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant={audioRate === 2 ? "default" : "outline"}
-                            className="text-xs px-2"
-                            onClick={() => setAudioRate(2)}
-                          >
-                            2x
-                          </Button>
-                        </div>
-                        <div className="flex flex-col gap-2 mt-2">
-                          <Button
-                            size="sm"
-                            onClick={() => playAudio(word.example, word.input_language)}
-                            className="w-full"
-                            variant="outline"
-                          >
-                            Ouvir ({inputLang.name})
-                          </Button>
-                          {word.example_translation && (
-                            <Button
-                              size="sm"
-                              onClick={() => playAudio(word.example_translation, word.output_language)}
-                              className="w-full"
-                              variant="outline"
-                            >
-                              Ouvir ({outputLang.name})
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
+                  <AudioButton
+                    text={word.example}
+                    language={word.input_language}
+                    className="text-gray-600 hover:bg-gray-100"
+                    iconClassName="w-4 h-4"
+                    ariaLabel="Ouvir exemplo"
+                  />
                 </div>
                 <div className="bg-gray-50 p-3 sm:p-4 rounded-lg border border-gray-100 text-sm sm:text-base">
                   <p className="text-gray-700">"{word.example}"</p>
                   {word.example_translation && (
-                    <p className="text-gray-500 italic mt-2">"{word.example_translation}"</p>
+                    <p className="text-gray-500 italic mt-2 flex items-center gap-1">
+                      "{word.example_translation}"
+                      <AudioButton
+                        text={word.example_translation}
+                        language={word.output_language}
+                        className="text-gray-500 hover:bg-gray-100"
+                        iconClassName="w-4 h-4"
+                        ariaLabel="Ouvir tradução do exemplo"
+                      />
+                    </p>
                   )}
                 </div>
               </div>
@@ -390,69 +212,27 @@ export default function TranslationResult({ word, onSaveFlashcard, onClose }) {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <h3 className="font-medium text-gray-700 text-sm sm:text-base">Definição:</h3>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <button className="p-1.5 hover:bg-gray-100 rounded-full">
-                        <Volume1 size={16} className="text-gray-600" />
-                      </button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-48 p-2">
-                      <div className="flex flex-col space-y-2">
-                        <p className="text-sm font-medium">Velocidade:</p>
-                        <div className="flex justify-between">
-                          <Button 
-                            size="sm" 
-                            variant={audioRate === 0.5 ? "default" : "outline"}
-                            className="text-xs px-2"
-                            onClick={() => setAudioRate(0.5)}
-                          >
-                            0.5x
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant={audioRate === 1 ? "default" : "outline"}
-                            className="text-xs px-2"
-                            onClick={() => setAudioRate(1)}
-                          >
-                            1x
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant={audioRate === 2 ? "default" : "outline"}
-                            className="text-xs px-2"
-                            onClick={() => setAudioRate(2)}
-                          >
-                            2x
-                          </Button>
-                        </div>
-                        <div className="flex flex-col gap-2 mt-2">
-                          <Button
-                            size="sm"
-                            onClick={() => playAudio(word.definition, word.input_language)}
-                            className="w-full"
-                            variant="outline"
-                          >
-                            Ouvir ({inputLang.name})
-                          </Button>
-                          {word.definition_translation && (
-                            <Button
-                              size="sm"
-                              onClick={() => playAudio(word.definition_translation, word.output_language)}
-                              className="w-full"
-                              variant="outline"
-                            >
-                              Ouvir ({outputLang.name})
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
+                  <AudioButton
+                    text={word.definition}
+                    language={word.input_language}
+                    className="text-gray-600 hover:bg-gray-100"
+                    iconClassName="w-4 h-4"
+                    ariaLabel="Ouvir definição"
+                  />
                 </div>
                 <div className="bg-gray-50 p-3 sm:p-4 rounded-lg border border-gray-100 text-sm sm:text-base">
                   <p className="text-gray-700">{word.definition}</p>
                   {word.definition_translation && (
-                    <p className="text-gray-500 italic mt-2">"{word.definition_translation}"</p>
+                    <p className="text-gray-500 italic mt-2 flex items-center gap-1">
+                      "{word.definition_translation}"
+                      <AudioButton
+                        text={word.definition_translation}
+                        language={word.output_language}
+                        className="text-gray-500 hover:bg-gray-100"
+                        iconClassName="w-4 h-4"
+                        ariaLabel="Ouvir tradução da definição"
+                      />
+                    </p>
                   )}
                 </div>
               </div>
@@ -468,7 +248,7 @@ export default function TranslationResult({ word, onSaveFlashcard, onClose }) {
                       key={index} 
                       variant="secondary" 
                       className="bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer text-xs sm:text-sm py-1 px-2"
-                      onClick={() => playAudio(synonym, word.input_language)}
+                      onClick={() => speak(synonym, word.input_language)}
                     >
                       {synonym}
                     </Badge>

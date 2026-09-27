@@ -3,7 +3,8 @@ import { Word } from "@/entities/Word";
 import { User } from "@/entities/User";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Layers, Loader2, ArrowLeft, BookOpen, ChevronRight, GraduationCap, ArrowRight, Volume2, Volume1, CheckSquare } from "lucide-react";
+import { Layers, Loader2, ArrowLeft, BookOpen, ChevronRight, GraduationCap, ArrowRight, CheckSquare } from "lucide-react";
+import AudioButton from "@/components/common/AudioButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -439,75 +440,6 @@ export default function Categories() {
   if (studyMode && flashcards.length > 0) {
     const currentCard = flashcards[currentStudyIndex];
     
-    const playAudio = (text, languageCode = 'en', rate = 1.0) => {
-      if (!text || typeof window === 'undefined' || !window.speechSynthesis) {
-        console.error("Speech Synthesis not supported.");
-        return;
-      }
-
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = rate;
-      
-      const languageMap = {
-        'pt': 'pt-BR',
-        'en': 'en-US',
-        'es': 'es-ES',
-        'fr': 'fr-FR'
-      };
-      
-      const actualLangCode = languageCode in languageMap ? languageCode : 'en';
-      utterance.lang = languageMap[actualLangCode] || 'en-US';
-
-      const setVoiceAndSpeak = () => {
-        const voices = window.speechSynthesis.getVoices();
-        let selectedVoice = null;
-        
-        const preferredVoices = {
-          'pt': ['Google português do Brasil', 'Microsoft Maria - Portuguese (Brazil)', 'Luciana', 'Joana'],
-          'en': ['Google US English', 'Microsoft David - English (United States)', 'Samantha', 'Alex'],
-          'es': ['Google español', 'Microsoft Helena - Spanish (Spain)', 'Monica', 'Jorge'],
-          'fr': ['Google français', 'Microsoft Hortense - French (France)', 'Amelie', 'Thomas']
-        };
-        
-        if (preferredVoices[actualLangCode]) {
-          selectedVoice = voices.find(v => 
-            preferredVoices[actualLangCode].some(preferred => 
-              v.name.toLowerCase().includes(preferred.toLowerCase())
-            ) && v.lang.startsWith(actualLangCode)
-          );
-        }
-        
-        if (!selectedVoice) {
-          selectedVoice = voices.find(v => 
-            v.lang === utterance.lang && v.localService
-          );
-        }
-        
-        if (!selectedVoice) {
-          selectedVoice = voices.find(v => 
-            v.lang.startsWith(actualLangCode) || v.lang === utterance.lang
-          );
-        }
-        
-        if (!selectedVoice) {
-          selectedVoice = voices.find(v => v.default);
-        }
-        
-        if (selectedVoice) {
-          utterance.voice = selectedVoice;
-        }
-        
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utterance);
-      };
-
-      if (window.speechSynthesis.getVoices().length > 0) {
-        setVoiceAndSpeak();
-      } else {
-        window.speechSynthesis.onvoiceschanged = setVoiceAndSpeak;
-      }
-    };
-    
     return (
       <div className="min-h-screen py-8 px-4">
         <div className="container mx-auto max-w-2xl">
@@ -550,18 +482,13 @@ export default function Categories() {
                       <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
                         {currentCard.input_word || currentCard.english}
                       </h2>
-                      <button
-                        onClick={(e) => { 
-                          e.stopPropagation(); 
-                          playAudio(
-                            currentCard.input_word || currentCard.english, 
-                            currentCard.input_language || 'en'
-                          ); 
-                        }}
-                        className="p-2 hover:bg-blue-100 rounded-full transition-colors"
-                      >
-                        <Volume2 className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
-                      </button>
+                      <AudioButton
+                        text={currentCard.input_word || currentCard.english}
+                        language={currentCard.input_language || 'en'}
+                        className="text-blue-600 hover:bg-blue-100"
+                        iconClassName="w-5 h-5 sm:w-6 sm:h-6"
+                        ariaLabel="Ouvir pronúncia"
+                      />
                     </div>
                     {currentCard.image_url && (
                       <div className="mt-4 mb-6 sm:mb-8 rounded-md overflow-hidden border border-gray-100 max-w-xs sm:max-w-sm">
@@ -580,69 +507,47 @@ export default function Categories() {
                       <h2 className="text-3xl sm:text-4xl font-bold text-indigo-600">
                         {currentCard.output_translation || currentCard.portuguese}
                       </h2>
-                      <button
-                        onClick={(e) => { 
-                          e.stopPropagation(); 
-                          playAudio(
-                            currentCard.output_translation || currentCard.portuguese, 
-                            currentCard.output_language || 'pt'
-                          ); 
-                        }}
-                        className="p-2 hover:bg-indigo-100 rounded-full transition-colors"
-                      >
-                        <Volume2 className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" />
-                      </button>
+                      <AudioButton
+                        text={currentCard.output_translation || currentCard.portuguese}
+                        language={currentCard.output_language || 'pt'}
+                        className="text-indigo-600 hover:bg-indigo-100"
+                        iconClassName="w-5 h-5 sm:w-6 sm:h-6"
+                        ariaLabel="Ouvir tradução"
+                      />
                     </div>
                     <div className="flex items-center gap-3 mb-4 sm:mb-6">
                       <p className="text-gray-600 text-base">{currentCard.input_word || currentCard.english}</p>
-                      <button
-                        onClick={(e) => { 
-                          e.stopPropagation(); 
-                          playAudio(
-                            currentCard.input_word || currentCard.english, 
-                            currentCard.input_language || 'en'
-                          ); 
-                        }}
-                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                      >
-                        <Volume1 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
-                      </button>
+                      <AudioButton
+                        text={currentCard.input_word || currentCard.english}
+                        language={currentCard.input_language || 'en'}
+                        className="text-gray-600 hover:bg-gray-100"
+                        iconClassName="w-4 h-4 sm:w-5 sm:h-5"
+                        ariaLabel="Ouvir pronúncia"
+                      />
                     </div>
                     
                     {currentCard.example && (
                       <div className="bg-gray-50 p-3 sm:p-4 rounded-md border border-gray-100 mb-4 max-w-md text-base">
                         <div className="flex items-center justify-between mb-1 sm:mb-2">
                           <p className="text-gray-700">"{currentCard.example}"</p>
-                          <button
-                            onClick={(e) => { 
-                              e.stopPropagation(); 
-                              playAudio(
-                                currentCard.example, 
-                                currentCard.input_language || 'en',
-                                0.8
-                              ); 
-                            }}
-                            className="p-2 hover:bg-gray-100 rounded-full transition-colors ml-2"
-                          >
-                            <Volume1 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
-                          </button>
+                          <AudioButton
+                            text={currentCard.example}
+                            language={currentCard.input_language || 'en'}
+                            className="text-gray-600 hover:bg-gray-100 ml-2"
+                            iconClassName="w-4 h-4 sm:w-5 sm:h-5"
+                            ariaLabel="Ouvir exemplo"
+                          />
                         </div>
                         {currentCard.example_translation && (
                           <div className="flex items-center justify-between">
                             <p className="text-gray-500 italic text-sm">{currentCard.example_translation}</p>
-                            <button
-                              onClick={(e) => { 
-                                e.stopPropagation(); 
-                                playAudio(
-                                  currentCard.example_translation, 
-                                  currentCard.output_language || 'pt',
-                                  0.8
-                                ); 
-                              }}
-                              className="p-2 hover:bg-gray-100 rounded-full transition-colors ml-2"
-                            >
-                              <Volume1 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
-                            </button>
+                            <AudioButton
+                              text={currentCard.example_translation}
+                              language={currentCard.output_language || 'pt'}
+                              className="text-gray-500 hover:bg-gray-100 ml-2"
+                              iconClassName="w-4 h-4 sm:w-5 sm:h-5"
+                              ariaLabel="Ouvir tradução do exemplo"
+                            />
                           </div>
                         )}
                       </div>
