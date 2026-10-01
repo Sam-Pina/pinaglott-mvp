@@ -184,6 +184,7 @@ export default function TranslationResult({ word, onSaveFlashcard, onClose }) {
                   <AudioButton
                     text={word.example}
                     language={word.input_language}
+                    mode="example"
                     className="text-gray-600 hover:bg-gray-100"
                     iconClassName="w-4 h-4"
                     ariaLabel="Ouvir exemplo"
@@ -197,6 +198,7 @@ export default function TranslationResult({ word, onSaveFlashcard, onClose }) {
                       <AudioButton
                         text={word.example_translation}
                         language={word.output_language}
+                        mode="example"
                         className="text-gray-500 hover:bg-gray-100"
                         iconClassName="w-4 h-4"
                         ariaLabel="Ouvir tradução do exemplo"
@@ -215,6 +217,7 @@ export default function TranslationResult({ word, onSaveFlashcard, onClose }) {
                   <AudioButton
                     text={word.definition}
                     language={word.input_language}
+                    mode="example"
                     className="text-gray-600 hover:bg-gray-100"
                     iconClassName="w-4 h-4"
                     ariaLabel="Ouvir definição"
@@ -228,6 +231,7 @@ export default function TranslationResult({ word, onSaveFlashcard, onClose }) {
                       <AudioButton
                         text={word.definition_translation}
                         language={word.output_language}
+                        mode="example"
                         className="text-gray-500 hover:bg-gray-100"
                         iconClassName="w-4 h-4"
                         ariaLabel="Ouvir tradução da definição"

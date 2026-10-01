@@ -533,6 +533,7 @@ export default function Categories() {
                           <AudioButton
                             text={currentCard.example}
                             language={currentCard.input_language || 'en'}
+                            mode="example"
                             className="text-gray-600 hover:bg-gray-100 ml-2"
                             iconClassName="w-4 h-4 sm:w-5 sm:h-5"
                             ariaLabel="Ouvir exemplo"
@@ -544,6 +545,7 @@ export default function Categories() {
                             <AudioButton
                               text={currentCard.example_translation}
                               language={currentCard.output_language || 'pt'}
+                              mode="example"
                               className="text-gray-500 hover:bg-gray-100 ml-2"
                               iconClassName="w-4 h-4 sm:w-5 sm:h-5"
                               ariaLabel="Ouvir tradução do exemplo"

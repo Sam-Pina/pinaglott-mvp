@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { User } from "@/entities/User";
 import { Word } from "@/entities/Word";
@@ -31,6 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format, differenceInDays, parseISO, subDays, addMonths, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import AchievementPopup from '../components/achievements/AchievementPopup';
+import PronunciationPreferences from '../components/common/PronunciationPreferences';
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -696,6 +696,8 @@ export default function Profile() {
                 <span className="text-gray-800">Sequência de estudo: </span>
                 <span className="font-bold">{stats.studyStreak} dias</span>
               </div>
+
+              <PronunciationPreferences />
 
               <div className="text-center">
                 <Button

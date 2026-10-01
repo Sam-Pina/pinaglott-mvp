@@ -15,6 +15,7 @@ let audioCounter = 0;
 export default function AudioButton({
   text,
   language = 'en',
+  mode = 'word',
   label = null,
   variant = 'ghost',
   size = 'icon',
@@ -46,7 +47,7 @@ export default function AudioButton({
       });
       return;
     }
-    speak(text, language, { id: idRef.current });
+    speak(text, language, { id: idRef.current, mode });
   };
 
   if (label) {
