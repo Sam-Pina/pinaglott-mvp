@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Volume2, Square } from 'lucide-react';
+import { Volume2, Square, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -8,35 +8,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import {
   getPortugueseVoices,
-  getVoicePreference,
-  setVoicePreference,
+  getPortuguesePreferences,
+  setPortuguesePreferences,
   subscribeVoices,
   subscribe,
   speak,
   cancelSpeech,
   loadVoices,
   isSupported,
+  PORTUGUESE_TEST_PHRASES,
 } from '@/lib/speechService';
+import PortugueseVoiceLab from './PortugueseVoiceLab';
 
 const TEST_ID = 'pronunciation-voice-test';
-const TEST_SENTENCE = 'Olá! Vamos aprender novas palavras em português.';
 
 /**
  * Preferências de pronúncia em Português (Perfil).
- * Mostra apenas vozes realmente disponíveis no dispositivo e permite testá-las.
+ * Voz, modo (Natural / Falar devagar) e frases de teste — tudo local ao dispositivo.
  */
 export default function PronunciationPreferences() {
   const [voices, setVoices] = useState([]);
-  const [preference, setPreference] = useState('auto');
-  const [speaking, setSpeaking] = useState(false);
+  const [prefs, setPrefs] = useState(getPortuguesePreferences());
+  const [speakingId, setSpeakingId] = useState(null);
 
   useEffect(() => {
     loadVoices();
-    setPreference(getVoicePreference());
-    const unsubscribeVoices = subscribeVoices(() => setVoices(getPortugueseVoices()));
-    const unsubscribe = subscribe((currentId) => setSpeaking(currentId === TEST_ID));
+    const unsubscribeVoices = subscribeVoices(() => {
+      setVoices(getPortugueseVoices());
+      setPrefs(getPortuguesePreferences());
+    });
+    const unsubscribe = subscribe((currentId) => setSpeakingId(currentId));
     return () => {
       unsubscribeVoices();
       unsubscribe();
@@ -45,33 +49,39 @@ export default function PronunciationPreferences() {
 
   if (!isSupported()) return null;
 
-  const handleChange = (value) => {
-    setPreference(value);
-    setVoicePreference(value);
-  };
+  const isSlow = prefs.preferredPortugueseMode === 'slow';
+  const selectValue = voices.some((v) => v.name === prefs.preferredPortugueseVoice)
+    ? prefs.preferredPortugueseVoice
+    : 'auto';
 
-  const handleTest = () => {
-    if (speaking) {
+  const handlePlay = (id, text) => {
+    if (speakingId === id) {
       cancelSpeech();
       return;
     }
-    speak(TEST_SENTENCE, 'pt', { id: TEST_ID, mode: 'example' });
+    speak(text, 'pt', { id, mode: 'example' });
   };
 
-  const selectValue = voices.some((v) => v.name === preference) ? preference : 'auto';
-
   return (
-    <div className="border-t border-gray-100 pt-4">
-      <label className="text-sm font-medium text-gray-500 block mb-2">
-        Voz em Português
-      </label>
+    <div className="border-t border-gray-100 pt-4 space-y-4">
       <div className="flex items-center gap-2">
-        <Select value={selectValue} onValueChange={handleChange}>
-          <SelectTrigger className="flex-1">
+        <Sparkles className="w-4 h-4 text-blue-600" />
+        <h4 className="text-sm font-medium text-gray-700">Preferências de pronúncia</h4>
+      </div>
+
+      <div>
+        <label className="text-sm font-medium text-gray-500 block mb-2">
+          Voz em Português
+        </label>
+        <Select
+          value={selectValue}
+          onValueChange={(value) => setPortuguesePreferences({ preferredPortugueseVoice: value })}
+        >
+          <SelectTrigger className="w-full">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="auto">Automática</SelectItem>
+            <SelectItem value="auto">Automática (melhor voz disponível)</SelectItem>
             {voices.map((voice) => (
               <SelectItem key={voice.name} value={voice.name}>
                 {voice.name}
@@ -79,27 +89,51 @@ export default function PronunciationPreferences() {
             ))}
           </SelectContent>
         </Select>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={handleTest}
-          className="h-9 shrink-0 border-blue-200 text-blue-600 hover:bg-blue-50"
-        >
-          {speaking ? (
-            <>
-              <Square className="w-3.5 h-3.5 mr-1 fill-current" />
-              Parar
-            </>
-          ) : (
-            <>
-              <Volume2 className="w-3.5 h-3.5 mr-1" />
-              Testar voz
-            </>
-          )}
-        </Button>
       </div>
-      <p className="text-xs text-gray-400 mt-2">
+
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-medium text-gray-700">Falar devagar</p>
+          <p className="text-xs text-gray-400">Modo de estudo (ritmo mais lento)</p>
+        </div>
+        <Switch
+          checked={isSlow}
+          onCheckedChange={(checked) =>
+            setPortuguesePreferences({ preferredPortugueseMode: checked ? 'slow' : 'natural' })
+          }
+        />
+      </div>
+
+      <div>
+        <p className="text-sm font-medium text-gray-500 mb-2">Frases para teste</p>
+        <div className="space-y-2">
+          {PORTUGUESE_TEST_PHRASES.map((phrase, index) => {
+            const id = `${TEST_ID}-phrase-${index}`;
+            const playing = speakingId === id;
+            return (
+              <div key={id} className="flex items-center gap-2 bg-gray-50 rounded-md p-2">
+                <p className="flex-1 text-sm text-gray-700">{phrase}</p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePlay(id, phrase)}
+                  className="h-8 shrink-0 border-blue-200 text-blue-600 hover:bg-blue-50"
+                >
+                  {playing
+                    ? <Square className="w-3.5 h-3.5 mr-1 fill-current" />
+                    : <Volume2 className="w-3.5 h-3.5 mr-1" />}
+                  {playing ? 'Parar' : 'Ouvir'}
+                </Button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <PortugueseVoiceLab />
+
+      <p className="text-xs text-gray-400">
         A pronúncia usa as vozes do seu próprio dispositivo — sem serviços externos.
       </p>
     </div>
