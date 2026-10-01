@@ -4,56 +4,32 @@
 // nenhum texto enviado para terceiros. Tudo acontece localmente no dispositivo.
 
 export const LANGUAGE_CONFIG = {
-  pt: { primary: 'pt-BR', fallbacks: ['pt', 'pt-PT'], rate: 0.98, pitch: 1.0, volume: 1.0, name: 'Português' },
+  pt: { primary: 'pt-BR', fallbacks: ['pt', 'pt-PT'], rate: 0.98, pitch: 1.02, volume: 1.0, name: 'Português' },
   en: { primary: 'en-US', fallbacks: ['en-GB', 'en'], rate: 0.88, pitch: 1.0, volume: 1.0, name: 'Inglês' },
   es: { primary: 'es-ES', fallbacks: ['es-MX', 'es'], rate: 0.90, pitch: 1.0, volume: 1.0, name: 'Espanhol' },
   fr: { primary: 'fr-FR', fallbacks: ['fr'], rate: 0.88, pitch: 1.0, volume: 1.0, name: 'Francês' },
 };
 
-// Perfil "Português Natural" — ponto de partida próximo da velocidade natural
-// da própria voz, evitando a sensação de leitura mecânica.
-export const PORTUGUESE_CONFIG = {
+// Configuração DEFINITIVA do Português Brasileiro.
+// Velocidade 0.98 e tom 1.02 — aplicada automaticamente em todo o app.
+export const PORTUGUESE_BR_DEFAULT = {
+  voiceName: 'Microsoft Daniel - Portuguese (Brazil)',
   language: 'pt-BR',
-  fallbackLanguages: ['pt', 'pt-PT'],
-  preferredVoices: ['Francisca', 'Antônio', 'Antonio'],
-  preferredLocalService: true,
   rate: 0.98,
-  pitch: 1.0,
+  pitch: 1.02,
   volume: 1.0,
-  slowRate: 0.90,
-  // Frase de contexto usada APENAS como fallback explícito — nunca automático.
-  contextPrefix: 'A palavra é',
 };
 
-// Frases de teste do laboratório de voz (item 8).
-export const PORTUGUESE_TEST_PHRASES = [
-  'Olá! Vamos aprender novas palavras em português.',
-  'Hoje eu vou estudar inglês, espanhol e francês.',
-  'Aprender novas palavras todos os dias ajuda a desenvolver o vocabulário.',
-];
+// Função central de configuração do português — nenhum componente duplica valores.
+export function getPortugueseSpeechConfig() {
+  return { ...PORTUGUESE_BR_DEFAULT };
+}
 
-// Configurações de comparação auditiva (item 9).
-export const PORTUGUESE_TUNING_PRESETS = [
-  { id: 'A', rate: 1.00, pitch: 1.00 },
-  { id: 'B', rate: 0.98, pitch: 1.00 },
-  { id: 'C', rate: 0.96, pitch: 1.00 },
-  { id: 'D', rate: 1.00, pitch: 0.98 },
-  { id: 'E', rate: 0.98, pitch: 1.02 },
-];
-
-// Nomes de vozes consideradas de melhor qualidade por idioma (EN/ES/FR mantidos como estavam).
+// Nomes de vozes preferidas para os demais idiomas (inalterado).
 const PREFERRED_VOICE_NAMES = {
   en: ['Google US English', 'Google UK English Female', 'Google UK English Male', 'Microsoft David', 'Microsoft Zira', 'Samantha', 'Alex'],
   es: ['Google español', 'Microsoft Helena', 'Microsoft Sabina', 'Microsoft Laura', 'Monica', 'Jorge'],
   fr: ['Google français', 'Microsoft Hortense', 'Microsoft Julie', 'Amelie', 'Thomas'],
-};
-
-const PT_PREFS_KEY = 'pinaglott_pt_voice_prefs';
-const DEFAULT_PT_PREFS = {
-  preferredPortugueseVoice: 'auto',
-  preferredPortugueseSpeechRate: 0.98,
-  preferredPortuguesePitch: 1.0,
-  preferredPortugueseMode: 'natural',
 };
 
 let cachedVoices = [];
@@ -64,17 +40,11 @@ let currentId = null;
 
 let ptVoiceCache = null;
 let ptVoiceCacheKey = null;
-let ptPrefs = null;
 
 const listeners = new Set();
-const voiceListeners = new Set();
 
 function emit() {
   listeners.forEach((cb) => cb(currentId));
-}
-
-function emitVoices() {
-  voiceListeners.forEach((cb) => cb());
 }
 
 // Permite que componentes saibam qual pronúncia está tocando no momento.
@@ -82,13 +52,6 @@ export function subscribe(cb) {
   listeners.add(cb);
   cb(currentId);
   return () => { listeners.delete(cb); };
-}
-
-// Permite que a interface reaja quando a lista de vozes do dispositivo muda.
-export function subscribeVoices(cb) {
-  voiceListeners.add(cb);
-  cb();
-  return () => { voiceListeners.delete(cb); };
 }
 
 export function isSupported() {
@@ -122,8 +85,15 @@ export function loadVoices() {
       voicesVersion++;
       ptVoiceCache = null;
       ptVoiceCacheKey = null;
-      emitVoices();
     };
+    // Alguns navegadores só preenchem a lista após um pequeno atraso.
+    let attempts = 0;
+    const retry = () => {
+      if (readVoices().length > 0 || attempts >= 12) return;
+      attempts++;
+      setTimeout(retry, 250);
+    };
+    retry();
   }
   return voices;
 }
@@ -133,54 +103,12 @@ export function getVoices() {
 }
 
 // ---------------------------------------------------------------------------
-// Preferências do usuário (persistidas no próprio dispositivo)
+// Seleção automática da voz em Português Brasileiro
 // ---------------------------------------------------------------------------
 
-export function getPortuguesePreferences() {
-  if (!ptPrefs) {
-    try {
-      const stored = JSON.parse(localStorage.getItem(PT_PREFS_KEY) || '{}');
-      ptPrefs = { ...DEFAULT_PT_PREFS, ...stored };
-    } catch (error) {
-      ptPrefs = { ...DEFAULT_PT_PREFS };
-    }
-  }
-  return ptPrefs;
-}
-
-export function setPortuguesePreferences(partial) {
-  ptPrefs = { ...getPortuguesePreferences(), ...partial };
-  try {
-    localStorage.setItem(PT_PREFS_KEY, JSON.stringify(ptPrefs));
-  } catch (error) {
-    // Sem persistência — apenas em memória.
-  }
-  ptVoiceCache = null;
-  ptVoiceCacheKey = null;
-  emitVoices();
-}
-
-// Velocidade efetiva do português: modo lento (estudo) ou perfil natural.
-export function getPortugueseRate() {
-  const prefs = getPortuguesePreferences();
-  if (prefs.preferredPortugueseMode === 'slow') return PORTUGUESE_CONFIG.slowRate;
-  return prefs.preferredPortugueseSpeechRate ?? PORTUGUESE_CONFIG.rate;
-}
-
-// Compatibilidade com a API anterior.
-export function getVoicePreference() {
-  return getPortuguesePreferences().preferredPortugueseVoice;
-}
-export function setVoicePreference(preference) {
-  setPortuguesePreferences({ preferredPortugueseVoice: preference || 'auto' });
-}
-
-// ---------------------------------------------------------------------------
-// Ranking da voz em Português
-// ---------------------------------------------------------------------------
-
-// Pontua cada voz portuguesa. Não depende exclusivamente do nome: se o sistema
-// expuser nomes diferentes, a pontuação por idioma/localService continua valendo.
+// Pontua cada voz portuguesa. Prioridade:
+// 1) "Daniel" + pt-BR   2) outra voz pt-BR   3) voz em português.
+// Vozes online/cloud são penalizadas — queremos a voz local do dispositivo.
 export function scorePortugueseVoice(voice) {
   if (!voice) return -Infinity;
   const lang = String(voice.lang || '').replace('_', '-').toLowerCase();
@@ -189,14 +117,11 @@ export function scorePortugueseVoice(voice) {
 
   let score = 0;
   if (lang === 'pt-br') score += 100;
-  else if (lang.startsWith('pt-br')) score += 80;
+  else if (lang.startsWith('pt')) score += 40;
 
-  if (voice.localService === true) score += 60;
-  if (name.includes('microsoft')) score += 30;
-  if (flatName.includes('francisca')) score += 50;
-  if (flatName.includes('antonio')) score += name.includes('antônio') ? 45 : 30;
+  if (voice.localService === true) score += 20;
+  if (flatName.includes('daniel')) score += 60;
 
-  // Evita vozes online/cloud — queremos voz local do dispositivo.
   if (name.includes('online')) score -= 100;
   if (name.includes('cloud')) score -= 100;
   if (name.includes('azure')) score -= 100;
@@ -211,33 +136,23 @@ export function getPortugueseVoices() {
   return readVoices().filter((v) => normalizeLangCode(v.lang) === 'pt');
 }
 
-function computeBestPortugueseVoice() {
+// Procura "Microsoft Daniel - Portuguese (Brazil)" tolerando pequenas
+// diferenças de nomenclatura. Nunca retorna voz de outro idioma.
+export function getBestPortugueseVoice() {
   const ptVoices = getPortugueseVoices();
   if (!ptVoices.length) return null;
 
-  const preference = getPortuguesePreferences().preferredPortugueseVoice;
-  if (preference && preference !== 'auto') {
-    const chosen = ptVoices.find((v) => v.name === preference);
-    if (chosen) return chosen;
-  }
+  const key = `${ptVoices.length}|${voicesVersion}`;
+  if (ptVoiceCache && ptVoiceCacheKey === key) return ptVoiceCache;
 
-  return ptVoices
+  ptVoiceCache = ptVoices
     .map((v) => ({ v, score: scorePortugueseVoice(v) }))
     .sort((a, b) => b.score - a.score)[0].v;
-}
-
-// Função central de seleção — com cache em memória (recalculada só quando as
-// vozes do dispositivo mudam ou quando a preferência do usuário muda).
-export function getBestPortugueseVoice() {
-  const voices = readVoices();
-  const key = `${voices.length}|${voicesVersion}|${getPortuguesePreferences().preferredPortugueseVoice}`;
-  if (ptVoiceCache && ptVoiceCacheKey === key) return ptVoiceCache;
-  ptVoiceCache = computeBestPortugueseVoice();
   ptVoiceCacheKey = key;
   return ptVoiceCache;
 }
 
-// Seleciona a melhor voz disponível. Português usa o ranking dedicado.
+// Seleciona a melhor voz disponível. Português usa a seleção dedicada.
 export function getBestVoice(language) {
   const lang = normalizeLangCode(language);
 
@@ -284,14 +199,11 @@ export function hasVoiceForLanguage(language) {
 // Normalização e fala
 // ---------------------------------------------------------------------------
 
-// Normaliza o texto apenas para a fala: remove espaços duplicados e caracteres
-// desnecessários, preservando acentos, cedilha, hífens e pontuação.
-// O texto exibido ao usuário nunca é alterado.
+// Preserva acentos, cedilha e TODA a pontuação (vírgulas, pontos, !, ?).
+// Apenas remove espaços repetidos. O texto exibido nunca é alterado.
 export function normalizeForSpeech(text) {
   if (!text) return '';
-  let value = String(text).replace(/\s+/g, ' ').trim();
-  value = value.replace(/[^\p{L}\p{N}\s.,!?;:'"()\-]/gu, '');
-  return value.replace(/\s+/g, ' ').trim();
+  return String(text).replace(/\s+/g, ' ').trim();
 }
 
 export function cancelSpeech() {
@@ -303,11 +215,10 @@ export function cancelSpeech() {
 }
 
 // Fala um texto no idioma informado.
-// - A frase é enviada como UM único SpeechSynthesisUtterance (prosódia preservada).
-// - options.mode: 'word' (padrão) | 'example'.
-// - options.variant: 'context' usa o fallback "A palavra é X." (nunca automático).
-// - options.rate / options.pitch sobrescrevem as preferências (usado no laboratório).
-// - options.onBoundary recebe o evento nativo 'boundary' (apenas visual, não divide a fala).
+// - A frase inteira é enviada como UM único SpeechSynthesisUtterance (prosódia preservada).
+// - Português usa sempre a configuração definitiva (voz Daniel, 0.98 / 1.02 / 1.00).
+// - Palavras isoladas são faladas exatamente como estão, sem texto extra.
+// - options.onBoundary recebe o evento nativo 'boundary' (apenas visual; não divide a fala).
 export function speak(text, language, options = {}) {
   if (!isSupported() || !text) return null;
 
@@ -321,19 +232,19 @@ export function speak(text, language, options = {}) {
   const clean = normalizeForSpeech(text);
   if (!clean) return null;
 
-  const mode = options.mode === 'example' ? 'example' : 'word';
-  const useContext = isPortuguese && mode === 'word' && options.variant === 'context';
-  const spokenText = useContext
-    ? `${PORTUGUESE_CONFIG.contextPrefix} ${clean}.`
-    : clean;
-
-  const prefs = isPortuguese ? getPortuguesePreferences() : null;
-
-  const utterance = new SpeechSynthesisUtterance(spokenText);
+  const utterance = new SpeechSynthesisUtterance(clean);
   utterance.lang = config.primary;
-  utterance.rate = options.rate ?? (isPortuguese ? getPortugueseRate() : config.rate);
-  utterance.pitch = options.pitch ?? (isPortuguese ? prefs.preferredPortuguesePitch : config.pitch);
-  utterance.volume = options.volume ?? config.volume ?? 1;
+
+  if (isPortuguese) {
+    const pt = getPortugueseSpeechConfig();
+    utterance.rate = pt.rate;
+    utterance.pitch = pt.pitch;
+    utterance.volume = pt.volume;
+  } else {
+    utterance.rate = options.rate ?? config.rate;
+    utterance.pitch = options.pitch ?? config.pitch;
+    utterance.volume = options.volume ?? config.volume ?? 1;
+  }
 
   const voice = getBestVoice(lang);
   if (voice) utterance.voice = voice;

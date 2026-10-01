@@ -57,7 +57,8 @@ export default function AudioButton({
         variant={variant}
         size={size}
         onClick={handleClick}
-        aria-label={ariaLabel || label}
+        aria-label={speaking ? 'Parar reprodução' : (ariaLabel || label)}
+        title={speaking ? 'Reproduzindo…' : undefined}
         className={className}
       >
         {speaking
